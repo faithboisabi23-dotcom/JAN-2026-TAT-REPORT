@@ -1,0 +1,5 @@
+Modality,Total tokens,Completed,Pending,Serving,Noshow,Standby,E-Complete
+XRAY,444,340,44,5,9,25,21
+MRI,815,410,160,6,17,109,113
+CT,370,271,16,2,2,46,33
+Ultrasound,650,541,22,4,10,30,43

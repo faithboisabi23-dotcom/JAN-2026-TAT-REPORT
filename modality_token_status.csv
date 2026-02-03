@@ -1,0 +1,5 @@
+Modality,Total tokens,Completed tokens,Non-completed tokens
+XRAY,444,340,83
+MRI,815,410,292
+CT,370,271,66
+Ultrasound,650,541,66

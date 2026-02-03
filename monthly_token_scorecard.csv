@@ -1,0 +1,9 @@
+metric,value
+Total tokens,2327.0
+Completed tokens,1596.0
+Pending tokens,249.0
+Serving tokens,17.0
+E-Complete tokens,212.0
+No-show tokens,38.0
+Standby tokens,215.0
+Completion rate,0.6858616244091105
