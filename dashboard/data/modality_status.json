@@ -1,0 +1,609 @@
+{
+  "months": [
+    {
+      "key": "nov",
+      "label": "November 2025",
+      "modalities": [
+        {
+          "modality": "AM",
+          "completed": 12,
+          "nonCompleted": 3,
+          "statusBreakdown": {
+            "complete": 12,
+            "pending": 1,
+            "standby": 2
+          }
+        },
+        {
+          "modality": "AMB",
+          "completed": 1,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 1
+          }
+        },
+        {
+          "modality": "CT",
+          "completed": 241,
+          "nonCompleted": 105,
+          "statusBreakdown": {
+            "complete": 241,
+            "e_complete": 25,
+            "noshow": 8,
+            "pending": 37,
+            "standby": 35
+          }
+        },
+        {
+          "modality": "EQ",
+          "completed": 5,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 5
+          }
+        },
+        {
+          "modality": "LB",
+          "completed": 25,
+          "nonCompleted": 3,
+          "statusBreakdown": {
+            "complete": 25,
+            "e_complete": 1,
+            "noshow": 1,
+            "pending": 1
+          }
+        },
+        {
+          "modality": "MRI",
+          "completed": 356,
+          "nonCompleted": 286,
+          "statusBreakdown": {
+            "complete": 356,
+            "e_complete": 71,
+            "noshow": 9,
+            "pending": 137,
+            "serving": 2,
+            "standby": 67
+          }
+        },
+        {
+          "modality": "RC",
+          "completed": 7,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 7
+          }
+        },
+        {
+          "modality": "RE",
+          "completed": 1,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 1
+          }
+        },
+        {
+          "modality": "Ultrasound",
+          "completed": 451,
+          "nonCompleted": 66,
+          "statusBreakdown": {
+            "complete": 451,
+            "e_complete": 19,
+            "noshow": 6,
+            "pending": 17,
+            "serving": 4,
+            "standby": 20
+          }
+        },
+        {
+          "modality": "XRAY",
+          "completed": 364,
+          "nonCompleted": 54,
+          "statusBreakdown": {
+            "complete": 364,
+            "e_complete": 27,
+            "noshow": 4,
+            "pending": 12,
+            "standby": 11
+          }
+        }
+      ]
+    },
+    {
+      "key": "dec",
+      "label": "December 2025",
+      "modalities": [
+        {
+          "modality": "AM",
+          "completed": 2,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 2
+          }
+        },
+        {
+          "modality": "CT",
+          "completed": 98,
+          "nonCompleted": 142,
+          "statusBreakdown": {
+            "complete": 98,
+            "e_complete": 49,
+            "noshow": 3,
+            "pending": 76,
+            "standby": 14
+          }
+        },
+        {
+          "modality": "EQ",
+          "completed": 5,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 5
+          }
+        },
+        {
+          "modality": "LB",
+          "completed": 20,
+          "nonCompleted": 5,
+          "statusBreakdown": {
+            "complete": 20,
+            "pending": 3,
+            "standby": 2
+          }
+        },
+        {
+          "modality": "MRI",
+          "completed": 282,
+          "nonCompleted": 253,
+          "statusBreakdown": {
+            "complete": 282,
+            "e_complete": 88,
+            "noshow": 11,
+            "pending": 113,
+            "serving": 2,
+            "standby": 39
+          }
+        },
+        {
+          "modality": "RC",
+          "completed": 5,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 5
+          }
+        },
+        {
+          "modality": "RE",
+          "completed": 2,
+          "nonCompleted": 1,
+          "statusBreakdown": {
+            "complete": 2,
+            "e_complete": 1
+          }
+        },
+        {
+          "modality": "Ultrasound",
+          "completed": 382,
+          "nonCompleted": 76,
+          "statusBreakdown": {
+            "complete": 382,
+            "e_complete": 24,
+            "noshow": 7,
+            "pending": 31,
+            "serving": 6,
+            "standby": 8
+          }
+        },
+        {
+          "modality": "XRAY",
+          "completed": 244,
+          "nonCompleted": 55,
+          "statusBreakdown": {
+            "complete": 244,
+            "e_complete": 16,
+            "pending": 29,
+            "serving": 3,
+            "standby": 7
+          }
+        }
+      ]
+    },
+    {
+      "key": "jan",
+      "label": "January 2026",
+      "modalities": [
+        {
+          "modality": "AM",
+          "completed": 1,
+          "nonCompleted": 4,
+          "statusBreakdown": {
+            "complete": 1,
+            "e_complete": 2,
+            "standby": 2
+          }
+        },
+        {
+          "modality": "CT",
+          "completed": 271,
+          "nonCompleted": 99,
+          "statusBreakdown": {
+            "complete": 271,
+            "e_complete": 33,
+            "noshow": 2,
+            "pending": 16,
+            "serving": 2,
+            "standby": 46
+          }
+        },
+        {
+          "modality": "EQ",
+          "completed": 3,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 3
+          }
+        },
+        {
+          "modality": "LB",
+          "completed": 19,
+          "nonCompleted": 10,
+          "statusBreakdown": {
+            "complete": 19,
+            "pending": 7,
+            "standby": 3
+          }
+        },
+        {
+          "modality": "MRI",
+          "completed": 410,
+          "nonCompleted": 405,
+          "statusBreakdown": {
+            "complete": 410,
+            "e_complete": 113,
+            "noshow": 17,
+            "pending": 160,
+            "serving": 6,
+            "standby": 109
+          }
+        },
+        {
+          "modality": "RC",
+          "completed": 5,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 5
+          }
+        },
+        {
+          "modality": "RE",
+          "completed": 6,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 6
+          }
+        },
+        {
+          "modality": "Ultrasound",
+          "completed": 541,
+          "nonCompleted": 109,
+          "statusBreakdown": {
+            "complete": 541,
+            "e_complete": 43,
+            "noshow": 10,
+            "pending": 22,
+            "serving": 4,
+            "standby": 30
+          }
+        },
+        {
+          "modality": "XRAY",
+          "completed": 340,
+          "nonCompleted": 104,
+          "statusBreakdown": {
+            "complete": 340,
+            "e_complete": 21,
+            "noshow": 9,
+            "pending": 44,
+            "serving": 5,
+            "standby": 25
+          }
+        }
+      ]
+    },
+    {
+      "key": "feb",
+      "label": "February 2026",
+      "modalities": [
+        {
+          "modality": "AM",
+          "completed": 0,
+          "nonCompleted": 2,
+          "statusBreakdown": {
+            "e_complete": 1,
+            "standby": 1
+          }
+        },
+        {
+          "modality": "CT",
+          "completed": 248,
+          "nonCompleted": 104,
+          "statusBreakdown": {
+            "complete": 248,
+            "e_complete": 37,
+            "noshow": 10,
+            "pending": 26,
+            "serving": 1,
+            "standby": 30
+          }
+        },
+        {
+          "modality": "EQ",
+          "completed": 0,
+          "nonCompleted": 2,
+          "statusBreakdown": {
+            "standby": 2
+          }
+        },
+        {
+          "modality": "LB",
+          "completed": 8,
+          "nonCompleted": 28,
+          "statusBreakdown": {
+            "complete": 8,
+            "pending": 21,
+            "standby": 7
+          }
+        },
+        {
+          "modality": "MRI",
+          "completed": 399,
+          "nonCompleted": 425,
+          "statusBreakdown": {
+            "complete": 399,
+            "e_complete": 92,
+            "noshow": 22,
+            "pending": 185,
+            "serving": 7,
+            "standby": 119
+          }
+        },
+        {
+          "modality": "RC",
+          "completed": 2,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 2
+          }
+        },
+        {
+          "modality": "RE",
+          "completed": 5,
+          "nonCompleted": 1,
+          "statusBreakdown": {
+            "complete": 5,
+            "e_complete": 1
+          }
+        },
+        {
+          "modality": "Ultrasound",
+          "completed": 473,
+          "nonCompleted": 91,
+          "statusBreakdown": {
+            "complete": 473,
+            "e_complete": 32,
+            "noshow": 2,
+            "pending": 22,
+            "serving": 6,
+            "standby": 29
+          }
+        },
+        {
+          "modality": "XRAY",
+          "completed": 340,
+          "nonCompleted": 130,
+          "statusBreakdown": {
+            "complete": 340,
+            "e_complete": 36,
+            "noshow": 7,
+            "pending": 48,
+            "serving": 5,
+            "standby": 34
+          }
+        }
+      ]
+    },
+    {
+      "key": "mar",
+      "label": "March 2026",
+      "modalities": [
+        {
+          "modality": "CT",
+          "completed": 233,
+          "nonCompleted": 112,
+          "statusBreakdown": {
+            "complete": 233,
+            "e_complete": 26,
+            "noshow": 7,
+            "pending": 22,
+            "serving": 5,
+            "standby": 52
+          }
+        },
+        {
+          "modality": "EQ",
+          "completed": 1,
+          "nonCompleted": 3,
+          "statusBreakdown": {
+            "complete": 1,
+            "e_complete": 2,
+            "noshow": 1
+          }
+        },
+        {
+          "modality": "LB",
+          "completed": 2,
+          "nonCompleted": 36,
+          "statusBreakdown": {
+            "complete": 2,
+            "e_complete": 4,
+            "pending": 25,
+            "standby": 7
+          }
+        },
+        {
+          "modality": "MRI",
+          "completed": 353,
+          "nonCompleted": 428,
+          "statusBreakdown": {
+            "complete": 353,
+            "e_complete": 87,
+            "noshow": 25,
+            "pending": 184,
+            "serving": 3,
+            "standby": 129
+          }
+        },
+        {
+          "modality": "RC",
+          "completed": 1,
+          "nonCompleted": 1,
+          "statusBreakdown": {
+            "complete": 1,
+            "standby": 1
+          }
+        },
+        {
+          "modality": "RE",
+          "completed": 1,
+          "nonCompleted": 1,
+          "statusBreakdown": {
+            "complete": 1,
+            "e_complete": 1
+          }
+        },
+        {
+          "modality": "Ultrasound",
+          "completed": 431,
+          "nonCompleted": 101,
+          "statusBreakdown": {
+            "complete": 431,
+            "e_complete": 38,
+            "noshow": 7,
+            "pending": 13,
+            "serving": 4,
+            "standby": 39
+          }
+        },
+        {
+          "modality": "XRAY",
+          "completed": 364,
+          "nonCompleted": 77,
+          "statusBreakdown": {
+            "complete": 364,
+            "e_complete": 21,
+            "noshow": 6,
+            "pending": 8,
+            "serving": 8,
+            "standby": 34
+          }
+        }
+      ]
+    },
+    {
+      "key": "apr",
+      "label": "April 2026",
+      "modalities": [
+        {
+          "modality": "AM",
+          "completed": 2,
+          "nonCompleted": 4,
+          "statusBreakdown": {
+            "complete": 2,
+            "e_complete": 2,
+            "pending": 2
+          }
+        },
+        {
+          "modality": "CT",
+          "completed": 174,
+          "nonCompleted": 90,
+          "statusBreakdown": {
+            "complete": 174,
+            "e_complete": 27,
+            "noshow": 7,
+            "pending": 21,
+            "serving": 3,
+            "standby": 32
+          }
+        },
+        {
+          "modality": "EQ",
+          "completed": 3,
+          "nonCompleted": 2,
+          "statusBreakdown": {
+            "complete": 3,
+            "e_complete": 2
+          }
+        },
+        {
+          "modality": "LB",
+          "completed": 5,
+          "nonCompleted": 24,
+          "statusBreakdown": {
+            "complete": 5,
+            "e_complete": 2,
+            "noshow": 2,
+            "pending": 13,
+            "standby": 7
+          }
+        },
+        {
+          "modality": "MRI",
+          "completed": 225,
+          "nonCompleted": 415,
+          "statusBreakdown": {
+            "complete": 225,
+            "e_complete": 64,
+            "noshow": 27,
+            "pending": 193,
+            "serving": 4,
+            "standby": 127
+          }
+        },
+        {
+          "modality": "RC",
+          "completed": 0,
+          "nonCompleted": 1,
+          "statusBreakdown": {
+            "e_complete": 1
+          }
+        },
+        {
+          "modality": "Ultrasound",
+          "completed": 364,
+          "nonCompleted": 71,
+          "statusBreakdown": {
+            "complete": 364,
+            "e_complete": 12,
+            "noshow": 4,
+            "pending": 27,
+            "standby": 28
+          }
+        },
+        {
+          "modality": "XRAY",
+          "completed": 289,
+          "nonCompleted": 75,
+          "statusBreakdown": {
+            "complete": 289,
+            "e_complete": 21,
+            "noshow": 9,
+            "pending": 10,
+            "serving": 6,
+            "standby": 29
+          }
+        }
+      ]
+    }
+  ]
+}
