@@ -622,70 +622,80 @@
         },
         {
           "modality": "CT",
-          "completed": 30,
-          "nonCompleted": 111,
+          "completed": 42,
+          "nonCompleted": 148,
           "statusBreakdown": {
-            "complete": 30,
-            "e_complete": 10,
-            "noshow": 4,
-            "pending": 68,
+            "complete": 42,
+            "e_complete": 16,
+            "noshow": 8,
+            "pending": 87,
             "serving": 1,
-            "standby": 28
+            "standby": 36
           }
         },
         {
           "modality": "EQ",
-          "completed": 1,
+          "completed": 3,
           "nonCompleted": 1,
           "statusBreakdown": {
-            "complete": 1,
+            "complete": 3,
             "standby": 1
           }
         },
         {
           "modality": "LB",
-          "completed": 0,
+          "completed": 1,
           "nonCompleted": 8,
           "statusBreakdown": {
+            "complete": 1,
             "pending": 5,
             "standby": 3
           }
         },
         {
           "modality": "MRI",
-          "completed": 123,
-          "nonCompleted": 160,
+          "completed": 161,
+          "nonCompleted": 239,
           "statusBreakdown": {
-            "complete": 123,
-            "e_complete": 38,
-            "noshow": 6,
-            "pending": 78,
-            "standby": 38
+            "complete": 161,
+            "e_complete": 46,
+            "noshow": 7,
+            "pending": 124,
+            "standby": 62
+          }
+        },
+        {
+          "modality": "RE",
+          "completed": 1,
+          "nonCompleted": 0,
+          "statusBreakdown": {
+            "complete": 1
           }
         },
         {
           "modality": "Ultrasound",
-          "completed": 169,
-          "nonCompleted": 42,
+          "completed": 214,
+          "nonCompleted": 76,
           "statusBreakdown": {
-            "complete": 169,
-            "e_complete": 12,
-            "noshow": 4,
-            "pending": 13,
-            "standby": 13
+            "complete": 214,
+            "e_complete": 16,
+            "noshow": 6,
+            "pending": 34,
+            "serving": 2,
+            "standby": 18
           }
         },
         {
           "modality": "XRAY",
-          "completed": 140,
-          "nonCompleted": 44,
+          "completed": 181,
+          "nonCompleted": 75,
           "statusBreakdown": {
-            "complete": 140,
-            "e_complete": 10,
-            "noshow": 8,
-            "pending": 7,
+            "complete": 181,
+            "e_complete": 12,
+            "noshow": 9,
+            "pending": 25,
             "serving": 3,
-            "standby": 16
+            "standby": 26
           }
         }
       ]

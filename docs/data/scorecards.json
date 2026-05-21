@@ -75,14 +75,14 @@
     {
       "key": "may",
       "label": "May 2026",
-      "totalTokens": 831,
-      "completedTokens": 463,
-      "eCompleteTokens": 71,
-      "pendingTokens": 171,
-      "servingTokens": 4,
-      "noShowTokens": 22,
-      "standbyTokens": 100,
-      "completionRate": 55.7
+      "totalTokens": 1152,
+      "completedTokens": 603,
+      "eCompleteTokens": 91,
+      "pendingTokens": 275,
+      "servingTokens": 6,
+      "noShowTokens": 30,
+      "standbyTokens": 147,
+      "completionRate": 52.3
     }
   ]
 }
