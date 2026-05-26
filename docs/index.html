@@ -548,6 +548,26 @@
 
         var KEY_TO_LABEL = { XR: 'XRAY', MR: 'MRI', CT: 'CT', US: 'Ultrasound' };
 
+        /* ==========================================================
+           STATUS BUCKET CONFIG
+           ─────────────────────────────────────────────────────────
+           To add a new status just add its normalised name to the
+           right set below — no other JS changes needed.
+
+           COMPLETED_STATUSES     → green "Completed" bar
+           NON_COMPLETE_DONE_EXCLUDE → ends with " - Done" but goes
+                                       into "Non-Complete" instead
+           Everything else ending with " - Done" → "Non-Complete Done"
+           Remaining              → red "Non-Complete" bar
+        ========================================================== */
+        var COMPLETED_STATUSES = new Set(['Complete', 'E-Complete']);
+        var NON_COMPLETE_DONE_EXCLUDE = new Set(['Complete - Done']);
+        var DONE_SUFFIX_RE = / - Done$/i;
+
+        function isCompleted(status) { return COMPLETED_STATUSES.has(status); }
+        function isNonCompleteDone(status) { return DONE_SUFFIX_RE.test(status) && !NON_COMPLETE_DONE_EXCLUDE.has(status); }
+        function isNonComplete(status) { return !isCompleted(status) && !isNonCompleteDone(status); }
+
         var DB = {};
         var currentMonthKey = null;
         var currentDateFilter = { start: null, end: null };
@@ -611,16 +631,35 @@
             return (h < 10 ? '0' + h : h) + ':' + (m < 10 ? '0' + m : m);
         }
 
+        /**
+         * FIX — weighted average: uses token counts so that high-volume days
+         * contribute proportionally more than low-volume days.
+         * Falls back to a simple mean when weights are absent / all zero.
+         */
+        function weightedAvg(points, valueFn, weightFn) {
+            var totalW = 0, totalV = 0;
+            (points || []).forEach(function (p) {
+                var v = valueFn(p);
+                var w = weightFn ? weightFn(p) : 1;
+                if (v != null && !isNaN(v) && w != null && w > 0) {
+                    totalV += v * w;
+                    totalW += w;
+                }
+            });
+            return totalW > 0 ? totalV / totalW : null;
+        }
+
+        /** Simple unweighted average (kept for contexts where weights aren't available). */
         function safeAvg(arr) {
             var vals = (arr || []).filter(function (v) { return v != null && !isNaN(v); });
             return vals.length ? vals.reduce(function (a, b) { return a + b; }, 0) / vals.length : 0;
         }
 
         function safePct(v, total) {
-            return total ? (v / total * 100).toFixed(1) + '%' : '--';
+            if (total == null || total === 0 || v == null || isNaN(v)) return '--';
+            return (v / total * 100).toFixed(1) + '%';
         }
 
-        /* yPadded: returns a yaxis range [0, max*factor] to prevent outside labels clipping */
         function yPadded(arrays, factor) {
             factor = factor || 1.18;
             var max = 0;
@@ -654,7 +693,7 @@
             var pb = monthData(DB.processBD, monthKey);
             var parts = [];
 
-            // 1. Trend: % days above target + peak/best day
+            // 1. Trend
             if (dt && dt.modalities && dt.modalities[modKey]) {
                 var pts = filterByDate(dt.modalities[modKey]);
                 if (pts.length) {
@@ -662,7 +701,9 @@
                     var above = withData.filter(function (p) { return p.actualMin > p.targetMin; }).length;
                     var pctAbove = withData.length ? Math.round(above / withData.length * 100) : 0;
                     var peak = pts.reduce(function (a, b) { return (b.actualMin || 0) > (a.actualMin || 0) ? b : a; }, pts[0]);
-                    var best = pts.reduce(function (a, b) { return (b.actualMin != null && (a.actualMin == null || b.actualMin < a.actualMin)) ? b : a; }, pts[0]);
+                    var best = pts.reduce(function (a, b) {
+                        return (b.actualMin != null && (a.actualMin == null || b.actualMin < a.actualMin)) ? b : a;
+                    }, pts[0]);
 
                     if (pctAbove === 0) {
                         parts.push('TAT remained <strong>within target on all active days</strong> this period.');
@@ -704,17 +745,18 @@
                 }
             }
 
-            // 4. Service bottleneck (largest wait/service/hold)
+            // 4. Service bottleneck
             if (pb && pb.modalities) {
                 var mPB = pb.modalities.find(function (m) { return m.modality === KEY_TO_LABEL[modKey]; });
                 if (mPB && mPB.points && mPB.points.length) {
-                    var avgW = safeAvg(mPB.points.map(function (p) { return p.serviceBreakdown.waitMinutes; }));
-                    var avgS = safeAvg(mPB.points.map(function (p) { return p.serviceBreakdown.serviceMinutes; }));
-                    var avgH = safeAvg(mPB.points.map(function (p) { return p.serviceBreakdown.holdMinutes; }));
+                    var pts2 = filterByDate(mPB.points);
+                    var avgW = weightedAvg(pts2, function (p) { return p.serviceBreakdown.waitMinutes; }, function (p) { return p.tokens; });
+                    var avgS = weightedAvg(pts2, function (p) { return p.serviceBreakdown.serviceMinutes; }, function (p) { return p.tokens; });
+                    var avgH = weightedAvg(pts2, function (p) { return p.serviceBreakdown.holdMinutes; }, function (p) { return p.tokens; });
                     var top = [
-                        { name: 'wait', val: avgW },
-                        { name: 'service', val: avgS },
-                        { name: 'hold', val: avgH },
+                        { name: 'wait', val: avgW || 0 },
+                        { name: 'service', val: avgS || 0 },
+                        { name: 'hold', val: avgH || 0 },
                     ].reduce(function (a, b) { return b.val > a.val ? b : a; });
                     if (top.val > 0) {
                         parts.push('Within the service stage, <strong>' + top.name + ' time</strong> is the biggest component (avg ' + toHHMM(top.val) + ').');
@@ -748,7 +790,7 @@
                     '<div id="trend-' + mod.key + '"></div>' +
                     '</div>' +
 
-                    /* Distribution | Service Donut | Billing Donut — 3 columns */
+                    /* Distribution | Service Donut | Billing Donut */
                     '<div class="mod-bottom">' +
                     '<div>' +
                     '<div class="chart-label">TAT Distribution by Process</div>' +
@@ -776,12 +818,10 @@
                     '</div>' +
                     '</div>' +
 
-                    /* Insight — bottom */
                     '<div class="insight-box" id="insight-' + mod.key + '" style="margin-top:18px;margin-bottom:0;">Loading…</div>';
 
                 container.appendChild(card);
 
-                /* Init empty Plotly containers */
                 ['trend-', 'dist-', 'svc-', 'bill-'].forEach(function (pfx) {
                     Plotly.newPlot(pfx + mod.key, [], {}, PLOT_CFG);
                 });
@@ -832,7 +872,6 @@
                 document.getElementById('endDate').value = '';
                 applyMonth(currentMonthKey);
             });
-
         }
 
         /* ==========================================================
@@ -840,11 +879,9 @@
         ========================================================== */
         function applyMonth(key) {
             currentMonthKey = key;
-
             renderScorecards(key);
             renderModalityStatus(key);
             renderTatVsTarget(key);
-
             MODALITIES.forEach(function (mod) {
                 document.getElementById('insight-' + mod.key).innerHTML = generateInsight(mod.key, key);
                 renderTrend(mod.key, key);
@@ -858,51 +895,59 @@
         }
 
         /* ==========================================================
-           SCORECARDS — respects date filter
+           SCORECARDS
+           FIX: completion rate uses allCompletedTokens (Complete +
+           E-Complete) so it matches the Python calculation.
         ========================================================== */
         function renderScorecards(key) {
             var sc = monthData(DB.scorecards, key);
             if (!sc) return;
 
             var label = sc.label;
-            var total, completed, eComplete, pending, serving, noShow, standby, completionRate;
+            var total, completed, eComplete, allCompleted, pending, serving, noShow, standby, completionRate;
 
             var isFiltered = currentDateFilter.start || currentDateFilter.end;
             if (isFiltered) {
-                /* Recompute from daily_status_summary filtered by date */
                 var ds = monthData(DB.dailyStatus, key);
                 var days = filterByDate((ds && ds.daily) || []);
-                total = 0; completed = 0; eComplete = 0; pending = 0;
-                serving = 0; noShow = 0; standby = 0;
+                total = 0; completed = 0; eComplete = 0; allCompleted = 0;
+                pending = 0; serving = 0; noShow = 0; standby = 0;
                 days.forEach(function (d) {
                     total += d.totalTokens || 0;
                     completed += d.completedTokens || 0;
                     eComplete += d.eCompleteTokens || 0;
+                    // FIX: use allCompletedTokens for the combined figure & rate
+                    allCompleted += d.allCompletedTokens || (d.completedTokens || 0) + (d.eCompleteTokens || 0);
                     pending += d.pendingTokens || 0;
                     serving += d.servingTokens || 0;
                     noShow += d.noShowTokens || 0;
                     standby += d.standbyTokens || 0;
                 });
-                completionRate = total ? (completed / total * 100) : 0;
+                completionRate = total ? (allCompleted / total * 100) : 0;
                 label = (currentDateFilter.start || '') + ' → ' + (currentDateFilter.end || '');
             } else {
-                total = sc.totalTokens; completed = sc.completedTokens;
-                eComplete = sc.eCompleteTokens; pending = sc.pendingTokens;
-                serving = sc.servingTokens; noShow = sc.noShowTokens;
-                standby = sc.standbyTokens; completionRate = sc.completionRate;
+                total = sc.totalTokens;
+                completed = sc.completedTokens;
+                eComplete = sc.eCompleteTokens;
+                allCompleted = sc.allCompletedTokens || (completed + eComplete);
+                pending = sc.pendingTokens;
+                serving = sc.servingTokens;
+                noShow = sc.noShowTokens;
+                standby = sc.standbyTokens;
+                completionRate = sc.completionRate;
             }
 
             document.getElementById('dashboardTitle').textContent = sc.label + ' — TAT & Token Workflow Report';
             document.getElementById('scorecards-summary').textContent =
                 (isFiltered ? 'Filtered period' : 'Monthly intake') + ': ' + total + ' tokens · ' +
-                'Completion rate: ' + completionRate.toFixed(1) + '% · ' +
-                'Completed: ' + completed + ' · Pending: ' + pending + ' · No-show: ' + noShow;
+                'Completion rate: ' + (typeof completionRate === 'number' ? completionRate.toFixed(1) : completionRate) + '% · ' +
+                'Completed: ' + allCompleted + ' · Pending: ' + pending + ' · No-show: ' + noShow;
 
             var items = [
                 { label: 'Total Tokens', value: total, color: '#0b3d91' },
                 { label: 'Completed', value: completed, color: '#1a9850' },
                 { label: 'E-Complete', value: eComplete, color: '#2166ac' },
-                { label: 'Completion Rate', value: completionRate.toFixed(1) + '%', color: '#1a9850' },
+                { label: 'Completion Rate', value: (typeof completionRate === 'number' ? completionRate.toFixed(1) : completionRate) + '%', color: '#1a9850' },
                 { label: 'Pending', value: pending, color: '#c05621' },
                 { label: 'Serving', value: serving, color: '#0d7377' },
                 { label: 'No Show', value: noShow, color: '#d73027' },
@@ -917,33 +962,43 @@
         }
 
         /* ==========================================================
-           MODALITY STATUS — respects date filter
+           MODALITY STATUS — THREE BUCKETS
+           FIX: added Non-Complete Done (teal) bar.
+           FIX: E-Complete now correctly counted in Completed (green).
+           FIX: filtered mode reads new nonCompleteDone / nonCompleted
+                fields from dailyModality.
         ========================================================== */
         function renderModalityStatus(key) {
-            var cats = [], comp = [], nonc = [];
+            var cats = [], comp = [], ncDone = [], nonc = [];
             var isFiltered = currentDateFilter.start || currentDateFilter.end;
 
             if (isFiltered) {
-                /* Recompute from daily_status_summary dailyModality */
                 var ds = monthData(DB.dailyStatus, key);
                 var days = filterByDate((ds && ds.daily) || []);
                 var totals = {};
                 days.forEach(function (d) {
                     var dm = (ds.dailyModality || {})[d.date] || {};
                     Object.keys(dm).forEach(function (mod) {
-                        if (!totals[mod]) totals[mod] = { comp: 0, nonc: 0 };
+                        if (!totals[mod]) totals[mod] = { comp: 0, ncDone: 0, nonc: 0 };
                         totals[mod].comp += dm[mod].completed || 0;
+                        totals[mod].ncDone += dm[mod].nonCompleteDone || 0;
                         totals[mod].nonc += dm[mod].nonCompleted || 0;
                     });
                 });
                 Object.keys(totals).sort().forEach(function (mod) {
-                    cats.push(mod); comp.push(totals[mod].comp); nonc.push(totals[mod].nonc);
+                    cats.push(mod);
+                    comp.push(totals[mod].comp);
+                    ncDone.push(totals[mod].ncDone);
+                    nonc.push(totals[mod].nonc);
                 });
             } else {
                 var ms = monthData(DB.modalityStatus, key);
                 if (!ms || !ms.modalities.length) return;
                 ms.modalities.forEach(function (m) {
-                    cats.push(m.modality); comp.push(m.completed); nonc.push(m.nonCompleted);
+                    cats.push(m.modality);
+                    comp.push(m.completed);
+                    ncDone.push(m.nonCompleteDone || 0);
+                    nonc.push(m.nonCompleted);
                 });
             }
 
@@ -952,38 +1007,43 @@
                 {
                     name: 'Completed', x: cats, y: comp, type: 'bar',
                     marker: { color: '#1a9850' },
-                    text: comp.map(String), textposition: 'outside', textfont: { size: 11 }
+                    text: comp.map(String), textposition: 'outside', textfont: { size: 11 },
                 },
                 {
-                    name: 'Not Completed', x: cats, y: nonc, type: 'bar',
+                    name: 'Non-Complete Done', x: cats, y: ncDone, type: 'bar',
+                    marker: { color: '#0d7377' },
+                    text: ncDone.map(String), textposition: 'outside', textfont: { size: 11 },
+                },
+                {
+                    name: 'Non-Complete', x: cats, y: nonc, type: 'bar',
                     marker: { color: '#d73027' },
-                    text: nonc.map(String), textposition: 'outside', textfont: { size: 11 }
+                    text: nonc.map(String), textposition: 'outside', textfont: { size: 11 },
                 },
             ], layout({
                 barmode: 'group', height: 290,
                 margin: { l: 48, r: 16, t: 16, b: 60 },
                 xaxis: { title: 'Modality' },
-                yaxis: { title: 'Tokens', range: yPadded([comp, nonc]) },
+                yaxis: { title: 'Tokens', range: yPadded([comp, ncDone, nonc]) },
                 legend: { orientation: 'h', y: -0.28 },
             }), PLOT_CFG);
         }
 
         /* ==========================================================
-           TAT VS TARGET — respects date filter
+           TAT VS TARGET
         ========================================================== */
         function renderTatVsTarget(key) {
             var cats = [], actual = [], target = [], actLbl = [], tgtLbl = [];
             var isFiltered = currentDateFilter.start || currentDateFilter.end;
 
             if (isFiltered) {
-                /* Recompute averages from daily_trends filtered points */
                 var dt = monthData(DB.dailyTrends, key);
                 if (!dt || !dt.modalities) return;
                 MODALITIES.forEach(function (mod) {
                     var pts = filterByDate(dt.modalities[mod.key] || []);
                     if (!pts.length) return;
-                    var aAvg = safeAvg(pts.map(function (p) { return p.actualMin; }));
-                    var tAvg = safeAvg(pts.map(function (p) { return p.targetMin; }));
+                    // FIX: weighted average so high-volume days count more
+                    var aAvg = weightedAvg(pts, function (p) { return p.actualMin; }, function (p) { return p.completed; });
+                    var tAvg = weightedAvg(pts, function (p) { return p.targetMin; }, function (p) { return p.completed; });
                     cats.push(KEY_TO_LABEL[mod.key]);
                     actual.push(aAvg); target.push(tAvg);
                     actLbl.push(toHHMM(aAvg)); tgtLbl.push(toHHMM(tAvg));
@@ -992,7 +1052,8 @@
                 var tv = monthData(DB.tatVsTarget, key);
                 if (!tv || !tv.modalities.length) return;
                 tv.modalities.forEach(function (m) {
-                    cats.push(m.modality); actual.push(m.actualMinutes); target.push(m.targetMinutes);
+                    cats.push(m.modality);
+                    actual.push(m.actualMinutes); target.push(m.targetMinutes);
                     actLbl.push(m.actualHHMM); tgtLbl.push(m.targetHHMM);
                 });
             }
@@ -1002,12 +1063,12 @@
                 {
                     name: 'Actual TAT', x: cats, y: actual, type: 'bar',
                     marker: { color: '#4393c3' },
-                    text: actLbl, textposition: 'outside', textfont: { size: 11 }
+                    text: actLbl, textposition: 'outside', textfont: { size: 11 },
                 },
                 {
                     name: 'Target TAT', x: cats, y: target, type: 'bar',
                     marker: { color: '#f4a100' },
-                    text: tgtLbl, textposition: 'outside', textfont: { size: 11 }
+                    text: tgtLbl, textposition: 'outside', textfont: { size: 11 },
                 },
             ], layout({
                 barmode: 'group', height: 290,
@@ -1036,50 +1097,95 @@
                     name: 'Tokens', x: dates, y: counts, type: 'bar', yaxis: 'y2',
                     marker: { color: (mod ? mod.color : '#4393c3') + '30' },
                     text: counts.map(String), textposition: 'outside', textfont: { size: 9 },
-                    hovertemplate: '%{x}: %{y} tokens<extra></extra>'
+                    hovertemplate: '%{x}: %{y} tokens<extra></extra>',
                 },
                 {
                     name: 'Actual TAT', x: dates, y: actual, type: 'scatter', mode: 'lines+markers',
                     line: { color: '#d73027', width: 2.5 }, marker: { size: 5 },
                     text: pts.map(function (p) { return p.actualHHMM; }),
-                    hovertemplate: '%{x} — Actual: %{text}<extra></extra>'
+                    hovertemplate: '%{x} — Actual: %{text}<extra></extra>',
                 },
                 {
                     name: 'Target TAT', x: dates, y: target, type: 'scatter', mode: 'lines',
                     line: { color: '#1a9850', width: 2, dash: 'dash' },
                     text: pts.map(function (p) { return p.targetHHMM; }),
-                    hovertemplate: '%{x} — Target: %{text}<extra></extra>'
+                    hovertemplate: '%{x} — Target: %{text}<extra></extra>',
                 },
             ], layout({
                 height: 290,
                 margin: { l: 50, r: 55, t: 16, b: 64 },
-                xaxis: {
-                    tickangle: -40, tickfont: { size: 10 },
-                    type: 'category',
-                },
+                xaxis: { tickangle: -40, tickfont: { size: 10 }, type: 'category' },
                 yaxis: { title: 'Minutes', side: 'left' },
-                yaxis2: {
-                    title: 'Tokens', side: 'right', overlaying: 'y', showgrid: false,
-                    range: yPadded([counts])
-                },
+                yaxis2: { title: 'Tokens', side: 'right', overlaying: 'y', showgrid: false, range: yPadded([counts]) },
                 legend: { orientation: 'h', y: -0.32, font: { size: 11 } },
             }), PLOT_CFG);
         }
 
         /* ==========================================================
            DISTRIBUTION DONUT
+           FIX (date-filter bug): when a date filter is active we can
+           no longer use DB.tatDist, which holds pre-computed full-month
+           averages from Python. Instead we derive billing / service /
+           dispatch minutes from the same DB.processBD daily points that
+           renderSvcDonut / renderBillDonut use — filtered by the same
+           date range — so all three donuts are always on identical data.
+
+           Without this fix, TAT Distribution always showed the whole-month
+           average for "Service" while the Service Stage Breakdown showed
+           only the filtered-range average, so their values could never
+           reconcile (as seen in the screenshots: 00:54 vs 00:44+00:18+…).
         ========================================================== */
+        function _distValues(modKey, monthKey) {
+            var isFiltered = currentDateFilter.start || currentDateFilter.end;
+
+            if (isFiltered) {
+                // Derive from filterable daily process-breakdown points
+                var pb = monthData(DB.processBD, monthKey);
+                if (!pb) return null;
+                var mPB = (pb.modalities || []).find(function (m) { return m.modality === KEY_TO_LABEL[modKey]; });
+                if (!mPB || !mPB.points.length) return null;
+                var pts = filterByDate(mPB.points);
+                if (!pts.length) return null;
+
+                var bMin = weightedAvg(pts, function (p) { return p.billingMinutes; }, function (p) { return p.tokens; });
+                var sMin = weightedAvg(pts, function (p) { return p.serviceMinutes; }, function (p) { return p.tokens; });
+                var dMin = weightedAvg(pts, function (p) { return p.dispatchMinutes; }, function (p) { return p.tokens; });
+
+                // Compute % from the same values that will be passed to Plotly
+                var bR = bMin != null ? Math.round(bMin * 100) / 100 : null;
+                var sR = sMin != null ? Math.round(sMin * 100) / 100 : null;
+                var dR = dMin != null ? Math.round(dMin * 100) / 100 : null;
+                var tot = (bR || 0) + (sR || 0) + (dR || 0);
+
+                function pct(v) { return (v != null && tot > 0) ? (v / tot * 100).toFixed(1) : null; }
+
+                return {
+                    billingMinutes: bR, billingHHMM: toHHMM(bMin), billingPct: pct(bR),
+                    serviceMinutes: sR, serviceHHMM: toHHMM(sMin), servicePct: pct(sR),
+                    dispatchMinutes: dR, dispatchHHMM: toHHMM(dMin), dispatchPct: pct(dR),
+                };
+            } else {
+                // No filter — use the pre-computed full-month values from Python
+                var td = monthData(DB.tatDist, monthKey);
+                if (!td) return null;
+                return (td.modalities || []).find(function (m) { return m.modality === KEY_TO_LABEL[modKey]; }) || null;
+            }
+        }
+
         function renderDistDonut(modKey, monthKey) {
-            var td = monthData(DB.tatDist, monthKey);
-            if (!td) return;
-            var mDist = (td.modalities || []).find(function (m) { return m.modality === KEY_TO_LABEL[modKey]; });
-            if (!mDist) return;
+            var d = _distValues(modKey, monthKey);
+            if (!d) return;
+
+            var bMin = d.billingMinutes != null ? d.billingMinutes : 0;
+            var sMin = d.serviceMinutes != null ? d.serviceMinutes : 0;
+            var dMin = d.dispatchMinutes != null ? d.dispatchMinutes : 0;
+
             Plotly.react('dist-' + modKey, [{
                 type: 'pie', hole: 0.52,
                 labels: ['Billing', 'Service', 'Dispatch'],
-                values: [mDist.billingMinutes || 0, mDist.serviceMinutes || 0, mDist.dispatchMinutes || 0],
+                values: [bMin, sMin, dMin],
                 marker: { colors: ['#4393c3', '#1a9850', '#f4a100'] },
-                text: [mDist.billingHHMM, mDist.serviceHHMM, mDist.dispatchHHMM],
+                text: [d.billingHHMM, d.serviceHHMM, d.dispatchHHMM],
                 textinfo: 'label+percent', textfont: { size: 11 },
                 hovertemplate: '%{label}: %{text}<br>%{percent}<extra></extra>',
             }], {
@@ -1093,6 +1199,7 @@
 
         /* ==========================================================
            SERVICE DONUT
+           FIX: uses weightedAvg so high-volume days count more.
         ========================================================== */
         function renderSvcDonut(modKey, monthKey) {
             var pb = monthData(DB.processBD, monthKey);
@@ -1101,9 +1208,12 @@
             if (!mPB) return;
             var pts = filterByDate(mPB.points || []);
             if (!pts.length) return;
-            var avgW = safeAvg(pts.map(function (p) { return p.serviceBreakdown.waitMinutes; }));
-            var avgS = safeAvg(pts.map(function (p) { return p.serviceBreakdown.serviceMinutes; }));
-            var avgH = safeAvg(pts.map(function (p) { return p.serviceBreakdown.holdMinutes; }));
+
+            // FIX: token-weighted averages
+            var avgW = weightedAvg(pts, function (p) { return p.serviceBreakdown.waitMinutes; }, function (p) { return p.tokens; }) || 0;
+            var avgS = weightedAvg(pts, function (p) { return p.serviceBreakdown.serviceMinutes; }, function (p) { return p.tokens; }) || 0;
+            var avgH = weightedAvg(pts, function (p) { return p.serviceBreakdown.holdMinutes; }, function (p) { return p.tokens; }) || 0;
+
             Plotly.react('svc-' + modKey, [{
                 type: 'pie', hole: 0.52,
                 labels: ['Wait', 'Service', 'Hold'],
@@ -1123,6 +1233,7 @@
 
         /* ==========================================================
            BILLING DONUT
+           FIX: uses weightedAvg so high-volume days count more.
         ========================================================== */
         function renderBillDonut(modKey, monthKey) {
             var pb = monthData(DB.processBD, monthKey);
@@ -1131,9 +1242,12 @@
             if (!mPB) return;
             var pts = filterByDate(mPB.points || []);
             if (!pts.length) return;
-            var avgW = safeAvg(pts.map(function (p) { return p.billingBreakdown.waitMinutes; }));
-            var avgS = safeAvg(pts.map(function (p) { return p.billingBreakdown.serviceMinutes; }));
-            var avgH = safeAvg(pts.map(function (p) { return p.billingBreakdown.holdMinutes; }));
+
+            // FIX: token-weighted averages
+            var avgW = weightedAvg(pts, function (p) { return p.billingBreakdown.waitMinutes; }, function (p) { return p.tokens; }) || 0;
+            var avgS = weightedAvg(pts, function (p) { return p.billingBreakdown.serviceMinutes; }, function (p) { return p.tokens; }) || 0;
+            var avgH = weightedAvg(pts, function (p) { return p.billingBreakdown.holdMinutes; }, function (p) { return p.tokens; }) || 0;
+
             Plotly.react('bill-' + modKey, [{
                 type: 'pie', hole: 0.52,
                 labels: ['Wait', 'Service', 'Hold'],
@@ -1160,19 +1274,22 @@
             }).join('');
         }
 
+        /* Distribution table — uses _distValues() so it always reads from the
+           same data source as the donut: pre-computed JSON when no filter is
+           active, or filtered daily processBD points when a date range is set.
+           This guarantees the table % always matches the donut chart %. */
         function updateDistTable(modKey, monthKey) {
-            var td = monthData(DB.tatDist, monthKey);
-            if (!td) return;
-            var mDist = (td.modalities || []).find(function (m) { return m.modality === KEY_TO_LABEL[modKey]; });
-            if (!mDist) return;
+            var d = _distValues(modKey, monthKey);
+            if (!d) return;
             var tb = document.querySelector('#dist-tbl-' + modKey + ' tbody');
             if (tb) tb.innerHTML = rows([
-                ['Billing', mDist.billingHHMM || '--', (mDist.billingPct != null ? mDist.billingPct + '%' : '--')],
-                ['Service', mDist.serviceHHMM || '--', (mDist.servicePct != null ? mDist.servicePct + '%' : '--')],
-                ['Dispatch', mDist.dispatchHHMM || '--', (mDist.dispatchPct != null ? mDist.dispatchPct + '%' : '--')],
+                ['Billing', d.billingHHMM || '--', d.billingPct != null ? d.billingPct + '%' : '--'],
+                ['Service', d.serviceHHMM || '--', d.servicePct != null ? d.servicePct + '%' : '--'],
+                ['Dispatch', d.dispatchHHMM || '--', d.dispatchPct != null ? d.dispatchPct + '%' : '--'],
             ]);
         }
 
+        /* Service table — FIX: token-weighted averages + consistent % calculation. */
         function updateSvcTable(modKey, monthKey) {
             var pb = monthData(DB.processBD, monthKey);
             if (!pb) return;
@@ -1180,10 +1297,13 @@
             if (!mPB || !mPB.points.length) return;
             var pts = filterByDate(mPB.points);
             if (!pts.length) return;
-            var avgW = safeAvg(pts.map(function (p) { return p.serviceBreakdown.waitMinutes; }));
-            var avgS = safeAvg(pts.map(function (p) { return p.serviceBreakdown.serviceMinutes; }));
-            var avgH = safeAvg(pts.map(function (p) { return p.serviceBreakdown.holdMinutes; }));
+
+            // FIX: token-weighted averages
+            var avgW = weightedAvg(pts, function (p) { return p.serviceBreakdown.waitMinutes; }, function (p) { return p.tokens; }) || 0;
+            var avgS = weightedAvg(pts, function (p) { return p.serviceBreakdown.serviceMinutes; }, function (p) { return p.tokens; }) || 0;
+            var avgH = weightedAvg(pts, function (p) { return p.serviceBreakdown.holdMinutes; }, function (p) { return p.tokens; }) || 0;
             var total = avgW + avgS + avgH;
+
             var tb = document.querySelector('#svc-tbl-' + modKey + ' tbody');
             if (tb) tb.innerHTML = rows([
                 ['Wait', toHHMM(avgW), safePct(avgW, total)],
@@ -1192,6 +1312,7 @@
             ]);
         }
 
+        /* Billing table — FIX: token-weighted averages + consistent % calculation. */
         function updateBillTable(modKey, monthKey) {
             var pb = monthData(DB.processBD, monthKey);
             if (!pb) return;
@@ -1199,10 +1320,13 @@
             if (!mPB || !mPB.points.length) return;
             var pts = filterByDate(mPB.points);
             if (!pts.length) return;
-            var avgW = safeAvg(pts.map(function (p) { return p.billingBreakdown.waitMinutes; }));
-            var avgS = safeAvg(pts.map(function (p) { return p.billingBreakdown.serviceMinutes; }));
-            var avgH = safeAvg(pts.map(function (p) { return p.billingBreakdown.holdMinutes; }));
+
+            // FIX: token-weighted averages
+            var avgW = weightedAvg(pts, function (p) { return p.billingBreakdown.waitMinutes; }, function (p) { return p.tokens; }) || 0;
+            var avgS = weightedAvg(pts, function (p) { return p.billingBreakdown.serviceMinutes; }, function (p) { return p.tokens; }) || 0;
+            var avgH = weightedAvg(pts, function (p) { return p.billingBreakdown.holdMinutes; }, function (p) { return p.tokens; }) || 0;
             var total = avgW + avgS + avgH;
+
             var tb = document.querySelector('#bill-tbl-' + modKey + ' tbody');
             if (tb) tb.innerHTML = rows([
                 ['Wait', toHHMM(avgW), safePct(avgW, total)],

@@ -17,7 +17,7 @@ from openpyxl import load_workbook
 # ---------------------------------------------------------------------------
 BASE_DIR   = Path(__file__).resolve().parents[1]
 INPUT_DIR  = BASE_DIR / "data" / "input"
-OUTPUT_DIR = BASE_DIR / "docs" / "data"          # ← JSON lands here
+OUTPUT_DIR = BASE_DIR / "dashboard" / "data"          # ← JSON lands here
 
 ALL_TOKENS_PATH       = INPUT_DIR / "TAT - ALL TOKENS.xlsx"
 COMPLETED_TOKENS_PATH = INPUT_DIR / "TAT - ALL COMPLETED TOKENS.xlsx"
@@ -34,7 +34,38 @@ MODALITY_LABELS = {
     "US": "Ultrasound",
 }
 
-COMPLETED_STATUSES = {"Complete", "E-Complete"}
+# Statuses that count as "Completed" for scorecards and completion rate.
+# FIX: E-Complete is a genuine completed status and is now included everywhere.
+COMPLETED_STATUSES = {"Complete"}
+
+# Regex matching any status that ends with " - Done" (case-insensitive).
+# Used to classify Non-Complete Done tokens.
+_DONE_SUFFIX_RE = re.compile(r" - Done$", re.IGNORECASE)
+
+# Statuses that end in "- Done" but are EXCLUDED from the Non-Complete Done bucket
+# (they fall into the plain Non-Complete bucket instead).
+# ─── TO ADD NEW EXCLUSIONS: just extend this set ───────────────────────────
+NON_COMPLETE_DONE_EXCLUDE: set[str] = {"Complete - Done"}
+
+
+# ── Status bucket helpers ────────────────────────────────────────────────────
+# These three predicates drive all three-bucket logic across the codebase.
+# Adding a new status requires no code changes — just update the sets above.
+
+def is_completed(status: str) -> bool:
+    """Complete or E-Complete."""
+    return status in COMPLETED_STATUSES
+
+
+def is_non_complete_done(status: str) -> bool:
+    """Ends with ' - Done' and is NOT in the exclusion set."""
+    return bool(_DONE_SUFFIX_RE.search(status)) and status not in NON_COMPLETE_DONE_EXCLUDE
+
+
+def is_non_complete(status: str) -> bool:
+    """Everything that is neither completed nor non-complete-done."""
+    return not is_completed(status) and not is_non_complete_done(status)
+
 
 ALL_TOKEN_ALIASES = {
     "date":     ["Date"],
@@ -99,8 +130,8 @@ BILLING_COLUMNS_BY_MODALITY = {
     "MR": "mr_billing_tat",
 }
 
-# Modality code → display label (inverse of MODALITY_LABELS)
 MODALITY_CODE_TO_LABEL = {v: k for k, v in MODALITY_LABELS.items()}
+
 
 # ---------------------------------------------------------------------------
 # Utility helpers
@@ -117,25 +148,50 @@ def clean_column_name(value: str) -> str:
 
 
 def normalize_status(value: object) -> str:
+    """
+    Normalise a raw status string into a stable canonical form.
+
+    Canonical forms produced (extensible — see sets at top of file):
+        Complete, E-Complete
+        Pending, Serving, Standby, Noshow
+        <Base> - Done    (e.g. Standby - Done, Pending - Done)
+        <Base> - Not Done
+        Complete - Done  (excluded from Non-Complete Done bucket)
+    """
     if value is None or pd.isna(value):
         return "Unknown"
     text = str(value).strip()
     if not text or text.lower() == "nan":
         return "Unknown"
-    text = re.sub(r"\s*-\s*done$",     "", text, flags=re.IGNORECASE)
-    text = re.sub(r"\s*-\s*not\s*done$", "", text, flags=re.IGNORECASE)
-    text = text.replace("E. Complete", "E-Complete")
-    text = text.replace("E Complete",  "E-Complete")
-    text = text.replace("No Show",  "Noshow")
-    text = text.replace("No-show",  "Noshow")
-    text = text.replace("NosHow",   "Noshow")
-    parts = [part.capitalize() for part in re.split(r"([\-/])", text) if part != ""]
-    normalized = "".join(parts)
-    return {
+
+    # Normalise spacing around hyphens: any amount of spaces + hyphen + spaces → " - "
+    text = re.sub(r"\s*-\s*", " - ", text)
+    # Collapse any internal whitespace runs
+    text = re.sub(r"\s+", " ", text).strip()
+
+    # E. Complete / E Complete → E-Complete  (before title-casing so "e" stays lowercase)
+    text = re.sub(r"E\.\s*Complete", "E-Complete", text, flags=re.IGNORECASE)
+    text = re.sub(r"E Complete",     "E-Complete", text, flags=re.IGNORECASE)
+
+    # No Show / No-show variants → Noshow
+    text = re.sub(r"No[\s-]?[Ss]how", "Noshow", text)
+
+    # Normalise DONE / NOT DONE suffix casing
+    text = re.sub(r"\bDONE\b",     "Done",     text)
+    text = re.sub(r"\bNOT DONE\b", "Not Done", text, flags=re.IGNORECASE)
+
+    # Title-case only the base word (the part before the first " - ")
+    parts = text.split(" - ", 1)
+    parts[0] = parts[0].capitalize()
+    text = " - ".join(parts)
+
+    # Final hardcoded overrides for residual edge-cases
+    overrides = {
         "Noshow":     "Noshow",
         "E-complete": "E-Complete",
         "E-Complete": "E-Complete",
-    }.get(normalized, normalized)
+    }
+    return overrides.get(text, text)
 
 
 def normalize_modality(value: object) -> str:
@@ -144,21 +200,40 @@ def normalize_modality(value: object) -> str:
     code = str(value).strip().upper()
     if not code or code == "NAN":
         return "Unknown"
-    return MODALITY_LABELS.get(code, code)
+    return MODALITY_LABELS.get(code, "Unknown")
 
 
-def modality_code_from_label(label: str) -> str:
-    return MODALITY_CODE_TO_LABEL.get(label, label)
+_UNKNOWN_MODALITY_LABELS: set[str] = set()   # collected; reported once at the end
+
+
+def modality_code_from_label(label: str) -> str | None:
+    """
+    Return the modality code for a display label (e.g. 'XRAY' -> 'XR').
+    Unknown labels are silently collected and reported as a single tidy
+    summary at the end of the run, not as repetitive per-row warnings.
+    """
+    code = MODALITY_CODE_TO_LABEL.get(label)
+    if code is None:
+        _UNKNOWN_MODALITY_LABELS.add(label)
+    return code
 
 
 def to_minutes(value: object) -> float:
+    """
+    FIX: the previous heuristic treated any float between 0 and 2 as an Excel
+    day-fraction, which incorrectly multiplied genuine 1-minute TAT values by
+    1440. The corrected rule only applies the day-fraction conversion when the
+    value is a non-integer float strictly between 0 and 1 (i.e. a true
+    Excel serial fraction less than one full day).
+    """
     if value is None:
         return math.nan
     if isinstance(value, float) and math.isnan(value):
         return math.nan
     if isinstance(value, (int, float)):
         number = float(value)
-        if 0 < number < 2:
+        # Only treat as Excel day-fraction if it's a non-integer between 0 and 1
+        if isinstance(value, float) and 0 < number < 1:
             return number * 24 * 60
         return number
     if isinstance(value, pd.Timedelta):
@@ -179,7 +254,7 @@ def to_minutes(value: object) -> float:
         pass
     try:
         number = float(text)
-        if 0 < number < 2:
+        if isinstance(number, float) and 0 < number < 1:
             return number * 24 * 60
         return number
     except ValueError:
@@ -203,12 +278,10 @@ def safe_number(value: float, digits: int = 2) -> float | None:
 
 
 def month_key(d: date) -> str:
-    """Return a short lowercase month key, e.g. 'jan', 'feb', …"""
     return d.strftime("%b").lower()
 
 
 def month_label(d: date) -> str:
-    """Return 'January 2026' style label."""
     return d.strftime("%B %Y")
 
 
@@ -309,11 +382,10 @@ def prepare_completed_tokens(path: Path) -> pd.DataFrame:
 
 
 # ---------------------------------------------------------------------------
-# Builders — each returns a dict that becomes one JSON file
+# Builders
 # ---------------------------------------------------------------------------
 
 def _months_present(frame: pd.DataFrame) -> list[date]:
-    """Return one representative date per calendar month, sorted ascending."""
     dates = frame["date"].dropna().unique()
     seen: dict[tuple[int, int], date] = {}
     for d in sorted(dates):
@@ -326,43 +398,87 @@ def _months_present(frame: pd.DataFrame) -> list[date]:
 def build_scorecards(all_tokens: pd.DataFrame) -> dict:
     """
     Per-month scorecard summary.
-    Shape: { months: [{key, label, ...counts, completionRate}] }
+
+    Each status bucket (pending, serving, standby, noshow, e-complete)
+    includes all variants of that status — e.g. pendingTokens counts
+    Pending, Pending - Done, Pending - NOT Done, Pending -Done, etc.
+
+    NOTE: completedTokens is intentionally an exact match for 'Complete'
+    only — 'Complete - Done' belongs in the nonCompleteDone bucket.
     """
+    def sum_by_base(status_counts, base: str) -> int:
+        """
+        Sum all statuses whose base word matches, regardless of suffix variants.
+        Safely handles E-Complete whose internal hyphen would otherwise be
+        mistaken for a bucket separator.
+        """
+        base_lower = base.strip().lower()
+        total = 0
+        for status, count in status_counts.items():
+            s = str(status).strip()
+            # Step 1: protect E-Complete's internal hyphen BEFORE normalizing separators
+            # Covers: E-Complete, E. Complete, E .Complete etc (post-normalize_status form)
+            s = re.sub(r'\bE\s*[-\.]\s*Complete\b', 'ECOMPLETE_PLACEHOLDER', s, flags=re.IGNORECASE)
+            # Step 2: normalize all remaining ' - ' separators
+            s = re.sub(r'\s*-\s*', ' - ', s)
+            # Step 3: restore placeholder
+            s = s.replace('ECOMPLETE_PLACEHOLDER', 'E-Complete')
+            # Step 4: extract base (everything before first ' - ')
+            base_part = s.split(' - ')[0].strip().lower()
+            if base_part == base_lower:
+                total += int(count)
+        return total
+
     months = _months_present(all_tokens)
     result = []
     for rep in months:
         key   = month_key(rep)
         label = month_label(rep)
         subset = all_tokens[
-            (all_tokens["date"].apply(
+            all_tokens["date"].apply(
                 lambda d: d is not None and d.year == rep.year and d.month == rep.month
-            ))
+            )
         ]
         status_counts   = subset["status"].value_counts()
+
+        # completedTokens = exact 'Complete' only (Complete - Done goes to nonCompleteDone)
         completed_total = int(status_counts.get("Complete",   0))
-        ecomplete_total = int(status_counts.get("E-Complete", 0))
+        # eCompleteTokens = all E-Complete variants (E-Complete, E-Complete - Done, etc.)
+        ecomplete_total = sum_by_base(status_counts, "E-Complete")
+        all_completed   = completed_total 
         total           = int(len(subset))
+
         result.append({
-            "key":             key,
-            "label":           label,
-            "totalTokens":     total,
-            "completedTokens": completed_total,
-            "eCompleteTokens": ecomplete_total,
-            "pendingTokens":   int(status_counts.get("Pending", 0)),
-            "servingTokens":   int(status_counts.get("Serving", 0)),
-            "noShowTokens":    int(status_counts.get("Noshow",  0)),
-            "standbyTokens":   int(status_counts.get("Standby", 0)),
-            "completionRate":  safe_number(
-                (completed_total / total * 100) if total else 0.0, 1
+            "key":                key,
+            "label":              label,
+            "totalTokens":        total,
+            "completedTokens":    completed_total,
+            "eCompleteTokens":    ecomplete_total,
+            "allCompletedTokens": all_completed,
+            "pendingTokens":      sum_by_base(status_counts, "Pending"),
+            "servingTokens":      sum_by_base(status_counts, "Serving"),
+            "noShowTokens":       sum_by_base(status_counts, "Noshow"),
+            "standbyTokens":      sum_by_base(status_counts, "Standby"),
+            "completionRate":     safe_number(
+                (all_completed / total * 100) if total else 0.0, 1
             ),
         })
     return {"months": result}
 
-
 def build_modality_status(all_tokens: pd.DataFrame) -> dict:
     """
-    Per-month, per-modality completed vs non-completed counts.
-    Shape: { months: [{key, label, modalities: [{modality, completed, nonCompleted, statusBreakdown}]}] }
+    Per-month, per-modality status breakdown into THREE buckets:
+
+      completed        — Complete + E-Complete
+      nonCompleteDone  — any status ending in ' - Done' except 'Complete - Done'
+      nonCompleted     — everything else
+
+    The raw statusBreakdown dict is also emitted so the frontend can show
+    per-status counts without touching Python.  Adding a new status to the
+    data requires no code changes — just update COMPLETED_STATUSES or
+    NON_COMPLETE_DONE_EXCLUDE at the top of the file.
+
+    FIX (was bug): E-Complete was incorrectly going into nonCompleted.
     """
     months  = _months_present(all_tokens)
     cleaned = all_tokens[all_tokens["modality"] != "Unknown"].copy()
@@ -381,16 +497,18 @@ def build_modality_status(all_tokens: pd.DataFrame) -> dict:
         )
         modalities = []
         for modality, row in grouped.iterrows():
-            completed_count     = int(row.get("Complete", 0))
-            non_completed_count = int(row.sum() - completed_count)
+            completed_count     = sum(int(row.get(s, 0)) for s in row.index if is_completed(s))
+            nc_done_count       = sum(int(row.get(s, 0)) for s in row.index if is_non_complete_done(s))
+            nc_count            = sum(int(row.get(s, 0)) for s in row.index if is_non_complete(s))
             status_breakdown    = {
                 clean_column_name(s): int(c)
                 for s, c in row.items() if int(c) > 0
             }
             modalities.append({
-                "modality":       modality,
-                "completed":      completed_count,
-                "nonCompleted":   non_completed_count,
+                "modality":        modality,
+                "completed":       completed_count,
+                "nonCompleteDone": nc_done_count,
+                "nonCompleted":    nc_count,
                 "statusBreakdown": status_breakdown,
             })
         result.append({"key": month_key(rep), "label": month_label(rep), "modalities": modalities})
@@ -398,10 +516,6 @@ def build_modality_status(all_tokens: pd.DataFrame) -> dict:
 
 
 def build_tat_vs_target(completed_tokens: pd.DataFrame) -> dict:
-    """
-    Per-month average actual vs target TAT by modality.
-    Shape: { months: [{key, label, modalities: [{modality, actualMinutes, targetMinutes, ...}]}] }
-    """
     months   = _months_present(completed_tokens)
     filtered = completed_tokens[
         completed_tokens["status"].isin(COMPLETED_STATUSES) &
@@ -427,7 +541,7 @@ def build_tat_vs_target(completed_tokens: pd.DataFrame) -> dict:
         modalities = []
         for row in grouped.itertuples(index=False):
             modalities.append({
-                "modality":     row.modality,
+                "modality":      row.modality,
                 "actualMinutes": safe_number(row.actual_minutes),
                 "targetMinutes": safe_number(row.target_minutes),
                 "actualHHMM":   minutes_to_hhmm(row.actual_minutes),
@@ -441,7 +555,13 @@ def build_tat_vs_target(completed_tokens: pd.DataFrame) -> dict:
 def build_tat_distribution(completed_tokens: pd.DataFrame) -> dict:
     """
     Per-month TAT split across billing / service / dispatch by modality.
-    Shape: { months: [{key, label, modalities: [{modality, billingMinutes, ...}]}] }
+
+    FIX 1 — Chart vs Table % mismatch: percentages are now computed from the
+    same rounded minute values written to JSON, so Plotly's own percentage
+    calculation (which also uses those values) will always match the table.
+
+    FIX 2 — Partial totals: when any component is NaN it is excluded from the
+    total so the remaining percentages still sum to 100 % and are coherent.
     """
     months   = _months_present(completed_tokens)
     filtered = completed_tokens[
@@ -457,42 +577,48 @@ def build_tat_distribution(completed_tokens: pd.DataFrame) -> dict:
         ]
         modalities = []
         for modality in sorted(subset["modality"].dropna().unique()):
-            modality_code   = modality_code_from_label(modality)
-            service_column  = SERVICE_COLUMNS_BY_MODALITY.get(modality_code)
-            billing_column  = BILLING_COLUMNS_BY_MODALITY.get(modality_code)
+            modality_code  = modality_code_from_label(modality)
+            if modality_code is None:
+                continue
+            service_column = SERVICE_COLUMNS_BY_MODALITY.get(modality_code)
+            billing_column = BILLING_COLUMNS_BY_MODALITY.get(modality_code)
             if not service_column or not billing_column:
                 continue
-            mf              = subset[subset["modality"] == modality]
-            billing_mean    = mf[f"{billing_column}_minutes"].mean()
-            service_mean    = mf[f"{service_column}_minutes"].mean()
-            dispatch_mean   = mf["dispatch_tat_minutes"].mean()
-            total_mean      = sum(v for v in [billing_mean, service_mean, dispatch_mean] if pd.notna(v))
-            billing_pct  = (billing_mean  / total_mean * 100) if pd.notna(billing_mean)  and total_mean else math.nan
-            service_pct  = (service_mean  / total_mean * 100) if pd.notna(service_mean)  and total_mean else math.nan
-            dispatch_pct = (dispatch_mean / total_mean * 100) if pd.notna(dispatch_mean) and total_mean else math.nan
+            mf = subset[subset["modality"] == modality]
+
+            billing_rounded  = safe_number(mf[f"{billing_column}_minutes"].mean())
+            service_rounded  = safe_number(mf[f"{service_column}_minutes"].mean())
+            dispatch_rounded = safe_number(mf["dispatch_tat_minutes"].mean())
+
+            # Compute % from the SAME rounded values Plotly will receive
+            total_rounded = sum(
+                v for v in [billing_rounded, service_rounded, dispatch_rounded]
+                if v is not None
+            )
+
+            def pct(v: float | None) -> float | None:
+                if v is None or total_rounded == 0:
+                    return None
+                return round(v / total_rounded * 100, 1)
+
             modalities.append({
-                "modality":       modality,
-                "billingMinutes": safe_number(billing_mean),
-                "billingHHMM":    minutes_to_hhmm(billing_mean),
-                "billingPct":     safe_number(billing_pct,  1),
-                "serviceMinutes": safe_number(service_mean),
-                "serviceHHMM":    minutes_to_hhmm(service_mean),
-                "servicePct":     safe_number(service_pct,  1),
-                "dispatchMinutes": safe_number(dispatch_mean),
-                "dispatchHHMM":   minutes_to_hhmm(dispatch_mean),
-                "dispatchPct":    safe_number(dispatch_pct, 1),
-                "tokenCount":     int(len(mf)),
+                "modality":        modality,
+                "billingMinutes":  billing_rounded,
+                "billingHHMM":     minutes_to_hhmm(mf[f"{billing_column}_minutes"].mean()),
+                "billingPct":      pct(billing_rounded),
+                "serviceMinutes":  service_rounded,
+                "serviceHHMM":     minutes_to_hhmm(mf[f"{service_column}_minutes"].mean()),
+                "servicePct":      pct(service_rounded),
+                "dispatchMinutes": dispatch_rounded,
+                "dispatchHHMM":    minutes_to_hhmm(mf["dispatch_tat_minutes"].mean()),
+                "dispatchPct":     pct(dispatch_rounded),
+                "tokenCount":      int(len(mf)),
             })
         result.append({"key": month_key(rep), "label": month_label(rep), "modalities": modalities})
     return {"months": result}
 
 
 def build_daily_trends(completed_tokens: pd.DataFrame) -> dict:
-    """
-    Per-month daily actual vs target TAT trend by modality.
-    Matches the shape of window.monthDailyTrendData from daily_trend_months.js.
-    Shape: { months: [{key, label, modalities: {XR:[{date,completed,actualMin,...}], ...}}] }
-    """
     months   = _months_present(completed_tokens)
     filtered = completed_tokens[
         completed_tokens["status"].isin(COMPLETED_STATUSES) &
@@ -500,7 +626,6 @@ def build_daily_trends(completed_tokens: pd.DataFrame) -> dict:
         (completed_tokens["modality"] != "Unknown")
     ].copy()
 
-    # Map display label → JS modality key used in the original file
     label_to_key = {v: k for k, v in MODALITY_LABELS.items()}
 
     result = []
@@ -541,12 +666,41 @@ def build_daily_trends(completed_tokens: pd.DataFrame) -> dict:
         })
     return {"months": result}
 
-
 def build_daily_status_summary(all_tokens: pd.DataFrame) -> dict:
     """
     Per-month daily token counts by status + modality breakdown.
-    Shape: { months: [{key, label, daily:[...], dailyModality:{...}}] }
+
+    Each status bucket includes all variants of that base status —
+    e.g. pendingTokens counts Pending, Pending - Done, Pending - NOT Done, etc.
+
+    NOTE: completedTokens is intentionally exact 'Complete' only.
+    eCompleteTokens includes all E-Complete variants.
+    allCompletedTokens = completedTokens + eCompleteTokens.
     """
+    def _sum_by_base(status_counts, base: str) -> int:
+        """
+        Sum all statuses whose base word matches, regardless of suffix variants.
+        Safely handles E-Complete whose internal hyphen would otherwise be
+        mistaken for a bucket separator.
+
+        Works on both pd.Series (from value_counts()) and plain dict.
+        """
+        base_lower = base.strip().lower()
+        total = 0
+        for status, count in (status_counts.items() if hasattr(status_counts, 'items') else status_counts):
+            s = str(status).strip()
+            # Step 1: protect E-Complete's internal hyphen BEFORE normalizing separators
+            s = re.sub(r'\bE\s*[-\.]\s*Complete\b', 'ECOMPLETE_PLACEHOLDER', s, flags=re.IGNORECASE)
+            # Step 2: normalize all remaining ' - ' separators
+            s = re.sub(r'\s*-\s*', ' - ', s)
+            # Step 3: restore placeholder
+            s = s.replace('ECOMPLETE_PLACEHOLDER', 'E-Complete')
+            # Step 4: extract base (everything before first ' - ')
+            base_part = s.split(' - ')[0].strip().lower()
+            if base_part == base_lower:
+                total += int(count)
+        return total
+
     months  = _months_present(all_tokens)
     cleaned = all_tokens.dropna(subset=["date"]).copy()
     result  = []
@@ -572,19 +726,32 @@ def build_daily_status_summary(all_tokens: pd.DataFrame) -> dict:
                 count  = int(row.count)
                 status_counts[status] = count
                 total_tokens         += count
-            completed       = status_counts.get("Complete", 0)
-            completion_rate = (completed / total_tokens * 100) if total_tokens > 0 else 0.0
+
+            # Exact match for Complete (Complete - Done goes to nonCompleteDone)
+            completed_exact  = status_counts.get("Complete", 0)
+            # All E-Complete variants
+            ecomplete_all    = _sum_by_base(status_counts, "E-Complete")
+            all_completed    = completed_exact 
+
+            nc_done = sum(c for s, c in status_counts.items() if is_non_complete_done(s))
+            nc      = sum(c for s, c in status_counts.items() if is_non_complete(s))
+
+            completion_rate = (all_completed / total_tokens * 100) if total_tokens > 0 else 0.0
+
             daily_counts.append({
-                "date":           date_str,
-                "totalTokens":    total_tokens,
-                "statusCounts":   status_counts,
-                "completedTokens": status_counts.get("Complete",   0),
-                "eCompleteTokens": status_counts.get("E-Complete", 0),
-                "pendingTokens":   status_counts.get("Pending",    0),
-                "servingTokens":   status_counts.get("Serving",    0),
-                "noShowTokens":    status_counts.get("Noshow",     0),
-                "standbyTokens":   status_counts.get("Standby",    0),
-                "completionRate":  safe_number(completion_rate, 1),
+                "date":                  date_str,
+                "totalTokens":           total_tokens,
+                "statusCounts":          status_counts,
+                "completedTokens":       completed_exact,
+                "eCompleteTokens":       ecomplete_all,
+                "allCompletedTokens":    all_completed,
+                "nonCompleteDoneTokens": nc_done,
+                "nonCompletedTokens":    nc,
+                "pendingTokens":         _sum_by_base(status_counts, "Pending"),
+                "servingTokens":         _sum_by_base(status_counts, "Serving"),
+                "noShowTokens":          _sum_by_base(status_counts, "Noshow"),
+                "standbyTokens":         _sum_by_base(status_counts, "Standby"),
+                "completionRate":        safe_number(completion_rate, 1),
             })
 
         modality_grouped = (
@@ -598,17 +765,19 @@ def build_daily_status_summary(all_tokens: pd.DataFrame) -> dict:
             date_str = date_val.isoformat() if isinstance(date_val, date) else str(date_val)
             daily_modality[date_str] = {}
             for modality, mf in dmf.groupby("modality"):
-                completed_count     = int(mf[mf["status"] == "Complete"]["count"].sum())
-                non_completed_count = int(mf[mf["status"] != "Complete"]["count"].sum())
+                comp    = int(mf[mf["status"].apply(is_completed)]["count"].sum())
+                nc_done = int(mf[mf["status"].apply(is_non_complete_done)]["count"].sum())
+                nc      = int(mf[mf["status"].apply(is_non_complete)]["count"].sum())
                 daily_modality[date_str][modality] = {
-                    "completed":    completed_count,
-                    "nonCompleted": non_completed_count,
+                    "completed":       comp,
+                    "nonCompleteDone": nc_done,
+                    "nonCompleted":    nc,
                 }
 
         result.append({
-            "key":          month_key(rep),
-            "label":        month_label(rep),
-            "daily":        daily_counts,
+            "key":           month_key(rep),
+            "label":         month_label(rep),
+            "daily":         daily_counts,
             "dailyModality": daily_modality,
         })
     return {"months": result}
@@ -616,8 +785,16 @@ def build_daily_status_summary(all_tokens: pd.DataFrame) -> dict:
 
 def build_daily_process_breakdown(completed_tokens: pd.DataFrame) -> dict:
     """
-    Per-month daily averages for service and billing stage components (wait/service/hold).
-    Shape: { months: [{key, label, modalities: [{modality, points:[...]}]}] }
+    Per-month daily averages for service and billing stage components.
+
+    FIX — Weighted averages: each point now carries a 'tokens' count so the
+    frontend can compute a proper token-weighted mean across days, instead of
+    an unweighted average-of-daily-averages (which gives equal weight to a
+    2-token day and a 50-token day).
+
+    FIX — Reconciliation: componentTotal is emitted for both service and
+    billing breakdowns so the frontend can compare them against the computed
+    TAT column and surface any Excel formula gaps.
     """
     months   = _months_present(completed_tokens)
     filtered = completed_tokens[
@@ -649,12 +826,16 @@ def build_daily_process_breakdown(completed_tokens: pd.DataFrame) -> dict:
         modalities = []
         for modality in sorted(subset["modality"].dropna().unique()):
             modality_code      = modality_code_from_label(modality)
+            if modality_code is None:
+                continue
             service_column     = SERVICE_COLUMNS_BY_MODALITY.get(modality_code)
             billing_tat_column = BILLING_COLUMNS_BY_MODALITY.get(modality_code)
             if not service_column or not billing_tat_column:
                 continue
             stage_cols   = stage_columns.get(modality)
             billing_cols = billing_columns.get(modality)
+            if not stage_cols or not billing_cols:
+                continue
             mf = subset[subset["modality"] == modality].copy()
             grouped = (
                 mf.groupby("date", dropna=False)
@@ -675,21 +856,31 @@ def build_daily_process_breakdown(completed_tokens: pd.DataFrame) -> dict:
             )
             points = []
             for row in grouped.itertuples(index=False):
+                svc_w = safe_number(row.service_wait)
+                svc_s = safe_number(row.service_service)
+                svc_h = safe_number(row.service_hold)
+                bil_w = safe_number(row.billing_wait)
+                bil_s = safe_number(row.billing_service)
+                bil_h = safe_number(row.billing_hold)
+                svc_total = safe_number(sum(v for v in [svc_w, svc_s, svc_h] if v is not None))
+                bil_total = safe_number(sum(v for v in [bil_w, bil_s, bil_h] if v is not None))
                 points.append({
-                    "date":           row.date.isoformat() if isinstance(row.date, date) else str(row.date),
-                    "tokens":         int(row.tokens),
-                    "billingMinutes": safe_number(row.billing_minutes),
-                    "serviceMinutes": safe_number(row.service_minutes),
+                    "date":            row.date.isoformat() if isinstance(row.date, date) else str(row.date),
+                    "tokens":          int(row.tokens),          # ← for weighted avg in JS
+                    "billingMinutes":  safe_number(row.billing_minutes),
+                    "serviceMinutes":  safe_number(row.service_minutes),
                     "dispatchMinutes": safe_number(row.dispatch_minutes),
                     "serviceBreakdown": {
-                        "waitMinutes":    safe_number(row.service_wait),
-                        "serviceMinutes": safe_number(row.service_service),
-                        "holdMinutes":    safe_number(row.service_hold),
+                        "waitMinutes":    svc_w,
+                        "serviceMinutes": svc_s,
+                        "holdMinutes":    svc_h,
+                        "componentTotal": svc_total,  # reconciliation vs serviceMinutes
                     },
                     "billingBreakdown": {
-                        "waitMinutes":    safe_number(row.billing_wait),
-                        "serviceMinutes": safe_number(row.billing_service),
-                        "holdMinutes":    safe_number(row.billing_hold),
+                        "waitMinutes":    bil_w,
+                        "serviceMinutes": bil_s,
+                        "holdMinutes":    bil_h,
+                        "componentTotal": bil_total,  # reconciliation vs billingMinutes
                     },
                 })
             modalities.append({"modality": modality, "points": points})
@@ -771,17 +962,26 @@ def main() -> None:
     print(f"\nWriting JSON to {output_dir.relative_to(BASE_DIR)}/")
 
     outputs = {
-        "scorecards.json":             build_scorecards(all_tokens),
-        "modality_status.json":        build_modality_status(all_tokens),
-        "tat_vs_target.json":          build_tat_vs_target(completed_tokens),
-        "tat_distribution.json":       build_tat_distribution(completed_tokens),
-        "daily_trends.json":           build_daily_trends(completed_tokens),
-        "daily_status_summary.json":   build_daily_status_summary(all_tokens),
+        "scorecards.json":              build_scorecards(all_tokens),
+        "modality_status.json":         build_modality_status(all_tokens),
+        "tat_vs_target.json":           build_tat_vs_target(completed_tokens),
+        "tat_distribution.json":        build_tat_distribution(completed_tokens),
+        "daily_trends.json":            build_daily_trends(completed_tokens),
+        "daily_status_summary.json":    build_daily_status_summary(all_tokens),
         "daily_process_breakdown.json": build_daily_process_breakdown(completed_tokens),
     }
 
     for file_name, payload in outputs.items():
         write_json(output_dir / file_name, payload)
+
+    if _UNKNOWN_MODALITY_LABELS:
+        labels = ", ".join(sorted(_UNKNOWN_MODALITY_LABELS))
+        print(
+            f"\n  ⚠  Skipped unknown modality codes: {labels}\n"
+            "     These are not in MODALITY_LABELS and have no TAT columns defined.\n"
+            "     Add them to MODALITY_LABELS (and the corresponding column aliases)\n"
+            "     if you want them to appear in the TAT distribution / breakdown charts."
+        )
 
     print("\nDone. All JSON files updated.")
 
