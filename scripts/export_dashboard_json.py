@@ -17,7 +17,7 @@ from openpyxl import load_workbook
 # ---------------------------------------------------------------------------
 BASE_DIR   = Path(__file__).resolve().parents[1]
 INPUT_DIR  = BASE_DIR / "data" / "input"
-OUTPUT_DIR = BASE_DIR / "dashboard" / "data"          # ← JSON lands here
+OUTPUT_DIR = BASE_DIR / "docs" / "data"          # ← JSON lands here
 
 ALL_TOKENS_PATH       = INPUT_DIR / "TAT - ALL TOKENS.xlsx"
 COMPLETED_TOKENS_PATH = INPUT_DIR / "TAT - ALL COMPLETED TOKENS.xlsx"

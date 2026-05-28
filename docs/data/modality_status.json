@@ -5,26 +5,9 @@
       "label": "November 2025",
       "modalities": [
         {
-          "modality": "AM",
-          "completed": 12,
-          "nonCompleted": 3,
-          "statusBreakdown": {
-            "complete": 12,
-            "pending": 1,
-            "standby": 2
-          }
-        },
-        {
-          "modality": "AMB",
-          "completed": 1,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 1
-          }
-        },
-        {
           "modality": "CT",
           "completed": 241,
+          "nonCompleteDone": 0,
           "nonCompleted": 105,
           "statusBreakdown": {
             "complete": 241,
@@ -35,56 +18,25 @@
           }
         },
         {
-          "modality": "EQ",
-          "completed": 5,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 5
-          }
-        },
-        {
-          "modality": "LB",
-          "completed": 25,
-          "nonCompleted": 3,
-          "statusBreakdown": {
-            "complete": 25,
-            "e_complete": 1,
-            "noshow": 1,
-            "pending": 1
-          }
-        },
-        {
           "modality": "MRI",
           "completed": 356,
-          "nonCompleted": 286,
+          "nonCompleteDone": 1,
+          "nonCompleted": 285,
           "statusBreakdown": {
             "complete": 356,
             "e_complete": 71,
             "noshow": 9,
-            "pending": 137,
+            "pending": 136,
+            "pending_not_done": 1,
             "serving": 2,
-            "standby": 67
-          }
-        },
-        {
-          "modality": "RC",
-          "completed": 7,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 7
-          }
-        },
-        {
-          "modality": "RE",
-          "completed": 1,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 1
+            "standby": 66,
+            "standby_done": 1
           }
         },
         {
           "modality": "Ultrasound",
           "completed": 451,
+          "nonCompleteDone": 0,
           "nonCompleted": 66,
           "statusBreakdown": {
             "complete": 451,
@@ -98,6 +50,7 @@
         {
           "modality": "XRAY",
           "completed": 364,
+          "nonCompleteDone": 0,
           "nonCompleted": 54,
           "statusBreakdown": {
             "complete": 364,
@@ -114,16 +67,9 @@
       "label": "December 2025",
       "modalities": [
         {
-          "modality": "AM",
-          "completed": 2,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 2
-          }
-        },
-        {
           "modality": "CT",
           "completed": 98,
+          "nonCompleteDone": 0,
           "nonCompleted": 142,
           "statusBreakdown": {
             "complete": 98,
@@ -134,26 +80,9 @@
           }
         },
         {
-          "modality": "EQ",
-          "completed": 5,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 5
-          }
-        },
-        {
-          "modality": "LB",
-          "completed": 20,
-          "nonCompleted": 5,
-          "statusBreakdown": {
-            "complete": 20,
-            "pending": 3,
-            "standby": 2
-          }
-        },
-        {
           "modality": "MRI",
           "completed": 282,
+          "nonCompleteDone": 0,
           "nonCompleted": 253,
           "statusBreakdown": {
             "complete": 282,
@@ -165,25 +94,9 @@
           }
         },
         {
-          "modality": "RC",
-          "completed": 5,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 5
-          }
-        },
-        {
-          "modality": "RE",
-          "completed": 2,
-          "nonCompleted": 1,
-          "statusBreakdown": {
-            "complete": 2,
-            "e_complete": 1
-          }
-        },
-        {
           "modality": "Ultrasound",
           "completed": 382,
+          "nonCompleteDone": 0,
           "nonCompleted": 76,
           "statusBreakdown": {
             "complete": 382,
@@ -197,6 +110,7 @@
         {
           "modality": "XRAY",
           "completed": 244,
+          "nonCompleteDone": 0,
           "nonCompleted": 55,
           "statusBreakdown": {
             "complete": 244,
@@ -213,18 +127,9 @@
       "label": "January 2026",
       "modalities": [
         {
-          "modality": "AM",
-          "completed": 1,
-          "nonCompleted": 4,
-          "statusBreakdown": {
-            "complete": 1,
-            "e_complete": 2,
-            "standby": 2
-          }
-        },
-        {
           "modality": "CT",
           "completed": 271,
+          "nonCompleteDone": 0,
           "nonCompleted": 99,
           "statusBreakdown": {
             "complete": 271,
@@ -236,26 +141,9 @@
           }
         },
         {
-          "modality": "EQ",
-          "completed": 3,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 3
-          }
-        },
-        {
-          "modality": "LB",
-          "completed": 19,
-          "nonCompleted": 10,
-          "statusBreakdown": {
-            "complete": 19,
-            "pending": 7,
-            "standby": 3
-          }
-        },
-        {
           "modality": "MRI",
           "completed": 410,
+          "nonCompleteDone": 0,
           "nonCompleted": 405,
           "statusBreakdown": {
             "complete": 410,
@@ -267,24 +155,9 @@
           }
         },
         {
-          "modality": "RC",
-          "completed": 5,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 5
-          }
-        },
-        {
-          "modality": "RE",
-          "completed": 6,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 6
-          }
-        },
-        {
           "modality": "Ultrasound",
           "completed": 541,
+          "nonCompleteDone": 0,
           "nonCompleted": 109,
           "statusBreakdown": {
             "complete": 541,
@@ -298,6 +171,7 @@
         {
           "modality": "XRAY",
           "completed": 340,
+          "nonCompleteDone": 0,
           "nonCompleted": 104,
           "statusBreakdown": {
             "complete": 340,
@@ -315,99 +189,75 @@
       "label": "February 2026",
       "modalities": [
         {
-          "modality": "AM",
-          "completed": 0,
-          "nonCompleted": 2,
-          "statusBreakdown": {
-            "e_complete": 1,
-            "standby": 1
-          }
-        },
-        {
           "modality": "CT",
           "completed": 248,
-          "nonCompleted": 104,
+          "nonCompleteDone": 26,
+          "nonCompleted": 78,
           "statusBreakdown": {
             "complete": 248,
-            "e_complete": 37,
+            "e_complete": 34,
+            "e_complete_done": 3,
             "noshow": 10,
-            "pending": 26,
+            "pending": 6,
+            "pending_done": 20,
             "serving": 1,
-            "standby": 30
-          }
-        },
-        {
-          "modality": "EQ",
-          "completed": 0,
-          "nonCompleted": 2,
-          "statusBreakdown": {
-            "standby": 2
-          }
-        },
-        {
-          "modality": "LB",
-          "completed": 8,
-          "nonCompleted": 28,
-          "statusBreakdown": {
-            "complete": 8,
-            "pending": 21,
-            "standby": 7
+            "standby": 27,
+            "standby_done": 3
           }
         },
         {
           "modality": "MRI",
-          "completed": 399,
-          "nonCompleted": 425,
+          "completed": 398,
+          "nonCompleteDone": 127,
+          "nonCompleted": 299,
           "statusBreakdown": {
-            "complete": 399,
-            "e_complete": 92,
+            "complete": 398,
+            "complete_done": 1,
+            "e_complete": 86,
+            "e_complete_done": 6,
             "noshow": 22,
-            "pending": 185,
-            "serving": 7,
-            "standby": 119
-          }
-        },
-        {
-          "modality": "RC",
-          "completed": 2,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 2
-          }
-        },
-        {
-          "modality": "RE",
-          "completed": 5,
-          "nonCompleted": 1,
-          "statusBreakdown": {
-            "complete": 5,
-            "e_complete": 1
+            "pending": 69,
+            "pending_done": 116,
+            "serving": 3,
+            "serving_done": 4,
+            "standby": 118,
+            "standby_done": 1
           }
         },
         {
           "modality": "Ultrasound",
           "completed": 473,
-          "nonCompleted": 91,
+          "nonCompleteDone": 34,
+          "nonCompleted": 57,
           "statusBreakdown": {
             "complete": 473,
-            "e_complete": 32,
+            "e_complete": 28,
+            "e_complete_done": 4,
             "noshow": 2,
-            "pending": 22,
-            "serving": 6,
-            "standby": 29
+            "pending": 2,
+            "pending_done": 20,
+            "serving": 2,
+            "serving_done": 4,
+            "standby": 23,
+            "standby_done": 6
           }
         },
         {
           "modality": "XRAY",
           "completed": 340,
-          "nonCompleted": 130,
+          "nonCompleteDone": 30,
+          "nonCompleted": 100,
           "statusBreakdown": {
             "complete": 340,
-            "e_complete": 36,
+            "e_complete": 33,
+            "e_complete_done": 3,
             "noshow": 7,
-            "pending": 48,
-            "serving": 5,
-            "standby": 34
+            "pending": 29,
+            "pending_done": 19,
+            "serving": 2,
+            "serving_done": 3,
+            "standby": 29,
+            "standby_done": 5
           }
         }
       ]
@@ -419,92 +269,70 @@
         {
           "modality": "CT",
           "completed": 233,
-          "nonCompleted": 112,
+          "nonCompleteDone": 19,
+          "nonCompleted": 93,
           "statusBreakdown": {
             "complete": 233,
-            "e_complete": 26,
+            "e_complete": 22,
+            "e_complete_done": 4,
             "noshow": 7,
-            "pending": 22,
-            "serving": 5,
-            "standby": 52
-          }
-        },
-        {
-          "modality": "EQ",
-          "completed": 1,
-          "nonCompleted": 3,
-          "statusBreakdown": {
-            "complete": 1,
-            "e_complete": 2,
-            "noshow": 1
-          }
-        },
-        {
-          "modality": "LB",
-          "completed": 2,
-          "nonCompleted": 36,
-          "statusBreakdown": {
-            "complete": 2,
-            "e_complete": 4,
-            "pending": 25,
-            "standby": 7
+            "pending": 11,
+            "pending_done": 11,
+            "serving": 3,
+            "serving_done": 2,
+            "standby": 50,
+            "standby_done": 2
           }
         },
         {
           "modality": "MRI",
           "completed": 353,
-          "nonCompleted": 428,
+          "nonCompleteDone": 89,
+          "nonCompleted": 339,
           "statusBreakdown": {
             "complete": 353,
             "e_complete": 87,
             "noshow": 25,
-            "pending": 184,
-            "serving": 3,
+            "pending": 96,
+            "pending_done": 88,
+            "serving": 2,
+            "serving_done": 1,
             "standby": 129
-          }
-        },
-        {
-          "modality": "RC",
-          "completed": 1,
-          "nonCompleted": 1,
-          "statusBreakdown": {
-            "complete": 1,
-            "standby": 1
-          }
-        },
-        {
-          "modality": "RE",
-          "completed": 1,
-          "nonCompleted": 1,
-          "statusBreakdown": {
-            "complete": 1,
-            "e_complete": 1
           }
         },
         {
           "modality": "Ultrasound",
           "completed": 431,
-          "nonCompleted": 101,
+          "nonCompleteDone": 16,
+          "nonCompleted": 85,
           "statusBreakdown": {
             "complete": 431,
-            "e_complete": 38,
+            "e_complete": 31,
+            "e_complete_done": 7,
             "noshow": 7,
-            "pending": 13,
-            "serving": 4,
+            "pending": 7,
+            "pending_done": 6,
+            "serving": 1,
+            "serving_done": 3,
             "standby": 39
           }
         },
         {
           "modality": "XRAY",
           "completed": 364,
-          "nonCompleted": 77,
+          "nonCompleteDone": 8,
+          "nonCompleted": 69,
           "statusBreakdown": {
             "complete": 364,
-            "e_complete": 21,
+            "e_complete": 18,
+            "e_complete_done": 3,
             "noshow": 6,
-            "pending": 8,
-            "serving": 8,
-            "standby": 34
+            "pending": 7,
+            "pending_done": 1,
+            "serving": 5,
+            "serving_done": 3,
+            "standby": 33,
+            "standby_done": 1
           }
         }
       ]
@@ -514,19 +342,9 @@
       "label": "April 2026",
       "modalities": [
         {
-          "modality": "AM",
-          "completed": 2,
-          "nonCompleted": 5,
-          "statusBreakdown": {
-            "complete": 2,
-            "e_complete": 2,
-            "pending": 2,
-            "standby": 1
-          }
-        },
-        {
           "modality": "CT",
           "completed": 210,
+          "nonCompleteDone": 0,
           "nonCompleted": 137,
           "statusBreakdown": {
             "complete": 210,
@@ -538,29 +356,9 @@
           }
         },
         {
-          "modality": "EQ",
-          "completed": 5,
-          "nonCompleted": 2,
-          "statusBreakdown": {
-            "complete": 5,
-            "e_complete": 2
-          }
-        },
-        {
-          "modality": "LB",
-          "completed": 5,
-          "nonCompleted": 29,
-          "statusBreakdown": {
-            "complete": 5,
-            "e_complete": 2,
-            "noshow": 2,
-            "pending": 17,
-            "standby": 8
-          }
-        },
-        {
           "modality": "MRI",
           "completed": 302,
+          "nonCompleteDone": 0,
           "nonCompleted": 500,
           "statusBreakdown": {
             "complete": 302,
@@ -572,16 +370,9 @@
           }
         },
         {
-          "modality": "RC",
-          "completed": 0,
-          "nonCompleted": 1,
-          "statusBreakdown": {
-            "e_complete": 1
-          }
-        },
-        {
           "modality": "Ultrasound",
           "completed": 479,
+          "nonCompleteDone": 0,
           "nonCompleted": 102,
           "statusBreakdown": {
             "complete": 479,
@@ -595,6 +386,7 @@
         {
           "modality": "XRAY",
           "completed": 361,
+          "nonCompleteDone": 0,
           "nonCompleted": 103,
           "statusBreakdown": {
             "complete": 361,
@@ -612,90 +404,71 @@
       "label": "May 2026",
       "modalities": [
         {
-          "modality": "AM",
-          "completed": 0,
-          "nonCompleted": 2,
-          "statusBreakdown": {
-            "e_complete": 1,
-            "standby": 1
-          }
-        },
-        {
           "modality": "CT",
-          "completed": 42,
-          "nonCompleted": 148,
+          "completed": 70,
+          "nonCompleteDone": 40,
+          "nonCompleted": 134,
           "statusBreakdown": {
-            "complete": 42,
-            "e_complete": 16,
+            "complete": 70,
+            "e_complete": 21,
             "noshow": 8,
-            "pending": 87,
-            "serving": 1,
-            "standby": 36
-          }
-        },
-        {
-          "modality": "EQ",
-          "completed": 3,
-          "nonCompleted": 1,
-          "statusBreakdown": {
-            "complete": 3,
-            "standby": 1
-          }
-        },
-        {
-          "modality": "LB",
-          "completed": 1,
-          "nonCompleted": 8,
-          "statusBreakdown": {
-            "complete": 1,
-            "pending": 5,
-            "standby": 3
+            "pending": 66,
+            "pending_done": 34,
+            "serving_done": 1,
+            "standby": 39,
+            "standby_done": 5
           }
         },
         {
           "modality": "MRI",
-          "completed": 161,
-          "nonCompleted": 239,
+          "completed": 235,
+          "nonCompleteDone": 76,
+          "nonCompleted": 224,
           "statusBreakdown": {
-            "complete": 161,
-            "e_complete": 46,
+            "complete": 235,
+            "e_complete": 52,
+            "e_complete_done": 1,
             "noshow": 7,
-            "pending": 124,
-            "standby": 62
-          }
-        },
-        {
-          "modality": "RE",
-          "completed": 1,
-          "nonCompleted": 0,
-          "statusBreakdown": {
-            "complete": 1
+            "noshow_done": 1,
+            "pending": 90,
+            "pending_done": 67,
+            "serving_done": 2,
+            "standby": 75,
+            "standby_done": 5
           }
         },
         {
           "modality": "Ultrasound",
-          "completed": 214,
-          "nonCompleted": 76,
+          "completed": 292,
+          "nonCompleteDone": 26,
+          "nonCompleted": 64,
           "statusBreakdown": {
-            "complete": 214,
-            "e_complete": 16,
+            "complete": 292,
+            "e_complete": 19,
+            "e_complete_done": 1,
             "noshow": 6,
-            "pending": 34,
-            "serving": 2,
-            "standby": 18
+            "pending": 16,
+            "pending_done": 23,
+            "serving_done": 2,
+            "standby": 23
           }
         },
         {
           "modality": "XRAY",
-          "completed": 181,
-          "nonCompleted": 75,
+          "completed": 249,
+          "nonCompleteDone": 31,
+          "nonCompleted": 55,
           "statusBreakdown": {
-            "complete": 181,
-            "e_complete": 12,
-            "noshow": 9,
-            "pending": 25,
+            "complete": 249,
+            "e_complete": 14,
+            "e_complete_done": 2,
+            "noshow": 8,
+            "noshow_done": 1,
+            "pending": 3,
+            "pending_done": 22,
             "serving": 3,
-            "standby": 26
+            "standby": 27,
+            "standby_done": 6
           }
         }
       ]
