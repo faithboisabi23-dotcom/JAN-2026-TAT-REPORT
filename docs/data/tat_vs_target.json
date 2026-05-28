@@ -234,35 +234,35 @@
       "modalities": [
         {
           "modality": "CT",
-          "actualMinutes": 223.8,
+          "actualMinutes": 215.25,
           "targetMinutes": 120.0,
-          "actualHHMM": "03:44",
+          "actualHHMM": "03:35",
           "targetHHMM": "02:00",
-          "tokenCount": 70
+          "tokenCount": 78
         },
         {
           "modality": "MRI",
-          "actualMinutes": 317.39,
+          "actualMinutes": 311.86,
           "targetMinutes": 150.0,
-          "actualHHMM": "05:17",
+          "actualHHMM": "05:12",
           "targetHHMM": "02:30",
-          "tokenCount": 235
+          "tokenCount": 255
         },
         {
           "modality": "Ultrasound",
-          "actualMinutes": 136.46,
+          "actualMinutes": 136.4,
           "targetMinutes": 90.0,
           "actualHHMM": "02:16",
           "targetHHMM": "01:30",
-          "tokenCount": 292
+          "tokenCount": 311
         },
         {
           "modality": "XRAY",
-          "actualMinutes": 105.03,
+          "actualMinutes": 107.37,
           "targetMinutes": 60.0,
-          "actualHHMM": "01:45",
+          "actualHHMM": "01:47",
           "targetHHMM": "01:00",
-          "tokenCount": 249
+          "tokenCount": 272
         }
       ]
     }
