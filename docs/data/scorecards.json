@@ -81,15 +81,28 @@
     {
       "key": "may",
       "label": "May 2026",
-      "totalTokens": 1644,
-      "completedTokens": 924,
-      "eCompleteTokens": 115,
-      "allCompletedTokens": 924,
-      "pendingTokens": 361,
-      "servingTokens": 9,
-      "noShowTokens": 32,
-      "standbyTokens": 203,
-      "completionRate": 56.2
+      "totalTokens": 1850,
+      "completedTokens": 1042,
+      "eCompleteTokens": 131,
+      "allCompletedTokens": 1042,
+      "pendingTokens": 405,
+      "servingTokens": 10,
+      "noShowTokens": 35,
+      "standbyTokens": 227,
+      "completionRate": 56.3
+    },
+    {
+      "key": "jun",
+      "label": "June 2026",
+      "totalTokens": 428,
+      "completedTokens": 233,
+      "eCompleteTokens": 24,
+      "allCompletedTokens": 233,
+      "pendingTokens": 87,
+      "servingTokens": 3,
+      "noShowTokens": 14,
+      "standbyTokens": 67,
+      "completionRate": 54.4
     }
   ]
 }
