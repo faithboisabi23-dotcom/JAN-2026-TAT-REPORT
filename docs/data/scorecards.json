@@ -94,15 +94,15 @@
     {
       "key": "jun",
       "label": "June 2026",
-      "totalTokens": 1093,
-      "completedTokens": 597,
-      "eCompleteTokens": 76,
-      "allCompletedTokens": 597,
-      "pendingTokens": 223,
-      "servingTokens": 9,
-      "noShowTokens": 40,
-      "standbyTokens": 148,
-      "completionRate": 54.6
+      "totalTokens": 1184,
+      "completedTokens": 651,
+      "eCompleteTokens": 82,
+      "allCompletedTokens": 651,
+      "pendingTokens": 238,
+      "servingTokens": 13,
+      "noShowTokens": 41,
+      "standbyTokens": 159,
+      "completionRate": 55.0
     }
   ]
 }

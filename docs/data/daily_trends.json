@@ -5686,6 +5686,14 @@
             "actualHHMM": "03:13",
             "targetMin": 120.0,
             "targetHHMM": "02:00"
+          },
+          {
+            "date": "2026-06-16",
+            "completed": 7,
+            "actualMin": 195.5,
+            "actualHHMM": "03:15",
+            "targetMin": 120.0,
+            "targetHHMM": "02:00"
           }
         ],
         "MR": [
@@ -5790,6 +5798,14 @@
             "completed": 8,
             "actualMin": 405.13,
             "actualHHMM": "06:45",
+            "targetMin": 150.0,
+            "targetHHMM": "02:30"
+          },
+          {
+            "date": "2026-06-16",
+            "completed": 12,
+            "actualMin": 443.11,
+            "actualHHMM": "07:23",
             "targetMin": 150.0,
             "targetHHMM": "02:30"
           }
@@ -5898,6 +5914,14 @@
             "actualHHMM": "02:33",
             "targetMin": 90.0,
             "targetHHMM": "01:30"
+          },
+          {
+            "date": "2026-06-16",
+            "completed": 21,
+            "actualMin": 160.1,
+            "actualHHMM": "02:40",
+            "targetMin": 90.0,
+            "targetHHMM": "01:30"
           }
         ],
         "XR": [
@@ -6002,6 +6026,14 @@
             "completed": 11,
             "actualMin": 127.15,
             "actualHHMM": "02:07",
+            "targetMin": 60.0,
+            "targetHHMM": "01:00"
+          },
+          {
+            "date": "2026-06-16",
+            "completed": 13,
+            "actualMin": 116.07,
+            "actualHHMM": "01:56",
             "targetMin": 60.0,
             "targetHHMM": "01:00"
           }
