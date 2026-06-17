@@ -7937,6 +7937,78 @@
           "noShowTokens": 1,
           "standbyTokens": 9,
           "completionRate": 57.6
+        },
+        {
+          "date": "2026-06-12",
+          "totalTokens": 111,
+          "statusCounts": {
+            "Complete": 66,
+            "E-Complete": 12,
+            "E-complete - Done": 1,
+            "Noshow": 3,
+            "Pending": 3,
+            "Pending - Done": 14,
+            "Serving": 1,
+            "Serving - Done": 1,
+            "Standby": 8,
+            "Standby - Done": 2
+          },
+          "completedTokens": 66,
+          "eCompleteTokens": 13,
+          "allCompletedTokens": 66,
+          "nonCompleteDoneTokens": 18,
+          "nonCompletedTokens": 27,
+          "pendingTokens": 17,
+          "servingTokens": 2,
+          "noShowTokens": 3,
+          "standbyTokens": 10,
+          "completionRate": 59.5
+        },
+        {
+          "date": "2026-06-13",
+          "totalTokens": 63,
+          "statusCounts": {
+            "Complete": 29,
+            "Noshow": 8,
+            "Pending": 1,
+            "Pending - Done": 11,
+            "Serving - Done": 1,
+            "Standby": 11,
+            "Standby - Done": 2
+          },
+          "completedTokens": 29,
+          "eCompleteTokens": 0,
+          "allCompletedTokens": 29,
+          "nonCompleteDoneTokens": 14,
+          "nonCompletedTokens": 20,
+          "pendingTokens": 12,
+          "servingTokens": 1,
+          "noShowTokens": 8,
+          "standbyTokens": 13,
+          "completionRate": 46.0
+        },
+        {
+          "date": "2026-06-15",
+          "totalTokens": 93,
+          "statusCounts": {
+            "Complete": 52,
+            "E-Complete": 8,
+            "E-complete - Done": 1,
+            "Noshow": 3,
+            "Pending": 2,
+            "Pending - Done": 16,
+            "Standby": 11
+          },
+          "completedTokens": 52,
+          "eCompleteTokens": 9,
+          "allCompletedTokens": 52,
+          "nonCompleteDoneTokens": 17,
+          "nonCompletedTokens": 24,
+          "pendingTokens": 18,
+          "servingTokens": 0,
+          "noShowTokens": 3,
+          "standbyTokens": 11,
+          "completionRate": 55.9
         }
       ],
       "dailyModality": {
@@ -8158,6 +8230,72 @@
             "completed": 8,
             "nonCompleteDone": 4,
             "nonCompleted": 5
+          }
+        },
+        "2026-06-12": {
+          "CT": {
+            "completed": 10,
+            "nonCompleteDone": 4,
+            "nonCompleted": 4
+          },
+          "MRI": {
+            "completed": 9,
+            "nonCompleteDone": 13,
+            "nonCompleted": 18
+          },
+          "Ultrasound": {
+            "completed": 24,
+            "nonCompleteDone": 0,
+            "nonCompleted": 2
+          },
+          "XRAY": {
+            "completed": 22,
+            "nonCompleteDone": 1,
+            "nonCompleted": 1
+          }
+        },
+        "2026-06-13": {
+          "CT": {
+            "completed": 4,
+            "nonCompleteDone": 4,
+            "nonCompleted": 1
+          },
+          "MRI": {
+            "completed": 14,
+            "nonCompleteDone": 9,
+            "nonCompleted": 14
+          },
+          "Ultrasound": {
+            "completed": 6,
+            "nonCompleteDone": 1,
+            "nonCompleted": 2
+          },
+          "XRAY": {
+            "completed": 4,
+            "nonCompleteDone": 0,
+            "nonCompleted": 2
+          }
+        },
+        "2026-06-15": {
+          "CT": {
+            "completed": 12,
+            "nonCompleteDone": 2,
+            "nonCompleted": 2
+          },
+          "MRI": {
+            "completed": 8,
+            "nonCompleteDone": 12,
+            "nonCompleted": 16
+          },
+          "Ultrasound": {
+            "completed": 19,
+            "nonCompleteDone": 3,
+            "nonCompleted": 4
+          },
+          "XRAY": {
+            "completed": 11,
+            "nonCompleteDone": 0,
+            "nonCompleted": 0
           }
         }
       }
