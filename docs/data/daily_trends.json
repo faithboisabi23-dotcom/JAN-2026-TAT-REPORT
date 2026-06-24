@@ -5702,6 +5702,38 @@
             "actualHHMM": "04:23",
             "targetMin": 120.0,
             "targetHHMM": "02:00"
+          },
+          {
+            "date": "2026-06-18",
+            "completed": 4,
+            "actualMin": 107.54,
+            "actualHHMM": "01:48",
+            "targetMin": 120.0,
+            "targetHHMM": "02:00"
+          },
+          {
+            "date": "2026-06-19",
+            "completed": 11,
+            "actualMin": 342.26,
+            "actualHHMM": "05:42",
+            "targetMin": 120.0,
+            "targetHHMM": "02:00"
+          },
+          {
+            "date": "2026-06-20",
+            "completed": 8,
+            "actualMin": 238.13,
+            "actualHHMM": "03:58",
+            "targetMin": 120.0,
+            "targetHHMM": "02:00"
+          },
+          {
+            "date": "2026-06-22",
+            "completed": 14,
+            "actualMin": 207.34,
+            "actualHHMM": "03:27",
+            "targetMin": 120.0,
+            "targetHHMM": "02:00"
           }
         ],
         "MR": [
@@ -5822,6 +5854,38 @@
             "completed": 7,
             "actualMin": 425.94,
             "actualHHMM": "07:06",
+            "targetMin": 150.0,
+            "targetHHMM": "02:30"
+          },
+          {
+            "date": "2026-06-18",
+            "completed": 7,
+            "actualMin": 346.7,
+            "actualHHMM": "05:47",
+            "targetMin": 150.0,
+            "targetHHMM": "02:30"
+          },
+          {
+            "date": "2026-06-19",
+            "completed": 17,
+            "actualMin": 395.45,
+            "actualHHMM": "06:35",
+            "targetMin": 150.0,
+            "targetHHMM": "02:30"
+          },
+          {
+            "date": "2026-06-20",
+            "completed": 1,
+            "actualMin": 420.67,
+            "actualHHMM": "07:01",
+            "targetMin": 150.0,
+            "targetHHMM": "02:30"
+          },
+          {
+            "date": "2026-06-22",
+            "completed": 11,
+            "actualMin": 320.38,
+            "actualHHMM": "05:20",
             "targetMin": 150.0,
             "targetHHMM": "02:30"
           }
@@ -5946,6 +6010,38 @@
             "actualHHMM": "02:53",
             "targetMin": 90.0,
             "targetHHMM": "01:30"
+          },
+          {
+            "date": "2026-06-18",
+            "completed": 12,
+            "actualMin": 134.61,
+            "actualHHMM": "02:15",
+            "targetMin": 90.0,
+            "targetHHMM": "01:30"
+          },
+          {
+            "date": "2026-06-19",
+            "completed": 17,
+            "actualMin": 217.3,
+            "actualHHMM": "03:37",
+            "targetMin": 90.0,
+            "targetHHMM": "01:30"
+          },
+          {
+            "date": "2026-06-20",
+            "completed": 14,
+            "actualMin": 122.93,
+            "actualHHMM": "02:03",
+            "targetMin": 90.0,
+            "targetHHMM": "01:30"
+          },
+          {
+            "date": "2026-06-22",
+            "completed": 24,
+            "actualMin": 124.95,
+            "actualHHMM": "02:05",
+            "targetMin": 90.0,
+            "targetHHMM": "01:30"
           }
         ],
         "XR": [
@@ -6066,6 +6162,38 @@
             "completed": 10,
             "actualMin": 133.91,
             "actualHHMM": "02:14",
+            "targetMin": 60.0,
+            "targetHHMM": "01:00"
+          },
+          {
+            "date": "2026-06-18",
+            "completed": 15,
+            "actualMin": 140.99,
+            "actualHHMM": "02:21",
+            "targetMin": 60.0,
+            "targetHHMM": "01:00"
+          },
+          {
+            "date": "2026-06-19",
+            "completed": 11,
+            "actualMin": 131.1,
+            "actualHHMM": "02:11",
+            "targetMin": 60.0,
+            "targetHHMM": "01:00"
+          },
+          {
+            "date": "2026-06-20",
+            "completed": 10,
+            "actualMin": 144.99,
+            "actualHHMM": "02:25",
+            "targetMin": 60.0,
+            "targetHHMM": "01:00"
+          },
+          {
+            "date": "2026-06-22",
+            "completed": 14,
+            "actualMin": 97.15,
+            "actualHHMM": "01:37",
             "targetMin": 60.0,
             "targetHHMM": "01:00"
           }
