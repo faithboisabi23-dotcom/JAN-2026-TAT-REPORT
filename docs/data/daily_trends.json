@@ -5742,6 +5742,14 @@
             "actualHHMM": "03:55",
             "targetMin": 120.0,
             "targetHHMM": "02:00"
+          },
+          {
+            "date": "2026-06-24",
+            "completed": 9,
+            "actualMin": 246.61,
+            "actualHHMM": "04:07",
+            "targetMin": 120.0,
+            "targetHHMM": "02:00"
           }
         ],
         "MR": [
@@ -5902,6 +5910,22 @@
             "completed": 11,
             "actualMin": 349.18,
             "actualHHMM": "05:49",
+            "targetMin": 150.0,
+            "targetHHMM": "02:30"
+          },
+          {
+            "date": "2026-06-24",
+            "completed": 6,
+            "actualMin": 459.37,
+            "actualHHMM": "07:39",
+            "targetMin": 150.0,
+            "targetHHMM": "02:30"
+          },
+          {
+            "date": "2026-06-25",
+            "completed": 4,
+            "actualMin": 374.42,
+            "actualHHMM": "06:14",
             "targetMin": 150.0,
             "targetHHMM": "02:30"
           }
@@ -6066,6 +6090,22 @@
             "actualHHMM": "02:19",
             "targetMin": 90.0,
             "targetHHMM": "01:30"
+          },
+          {
+            "date": "2026-06-24",
+            "completed": 9,
+            "actualMin": 94.95,
+            "actualHHMM": "01:35",
+            "targetMin": 90.0,
+            "targetHHMM": "01:30"
+          },
+          {
+            "date": "2026-06-25",
+            "completed": 3,
+            "actualMin": 171.27,
+            "actualHHMM": "02:51",
+            "targetMin": 90.0,
+            "targetHHMM": "01:30"
           }
         ],
         "XR": [
@@ -6226,6 +6266,14 @@
             "completed": 21,
             "actualMin": 124.14,
             "actualHHMM": "02:04",
+            "targetMin": 60.0,
+            "targetHHMM": "01:00"
+          },
+          {
+            "date": "2026-06-24",
+            "completed": 15,
+            "actualMin": 118.35,
+            "actualHHMM": "01:58",
             "targetMin": 60.0,
             "targetHHMM": "01:00"
           }
