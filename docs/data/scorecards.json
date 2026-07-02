@@ -103,6 +103,19 @@
       "noShowTokens": 69,
       "standbyTokens": 305,
       "completionRate": 54.9
+    },
+    {
+      "key": "jul",
+      "label": "July 2026",
+      "totalTokens": 99,
+      "completedTokens": 56,
+      "eCompleteTokens": 7,
+      "allCompletedTokens": 56,
+      "pendingTokens": 15,
+      "servingTokens": 0,
+      "noShowTokens": 8,
+      "standbyTokens": 13,
+      "completionRate": 56.6
     }
   ]
 }

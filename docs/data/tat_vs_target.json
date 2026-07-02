@@ -303,6 +303,44 @@
           "tokenCount": 326
         }
       ]
+    },
+    {
+      "key": "jul",
+      "label": "July 2026",
+      "modalities": [
+        {
+          "modality": "CT",
+          "actualMinutes": 258.84,
+          "targetMinutes": 120.0,
+          "actualHHMM": "04:19",
+          "targetHHMM": "02:00",
+          "tokenCount": 12
+        },
+        {
+          "modality": "MRI",
+          "actualMinutes": 419.79,
+          "targetMinutes": 150.0,
+          "actualHHMM": "07:00",
+          "targetHHMM": "02:30",
+          "tokenCount": 15
+        },
+        {
+          "modality": "Ultrasound",
+          "actualMinutes": 141.99,
+          "targetMinutes": 90.0,
+          "actualHHMM": "02:22",
+          "targetHHMM": "01:30",
+          "tokenCount": 16
+        },
+        {
+          "modality": "XRAY",
+          "actualMinutes": 116.49,
+          "targetMinutes": 60.0,
+          "actualHHMM": "01:56",
+          "targetHHMM": "01:00",
+          "tokenCount": 13
+        }
+      ]
     }
   ]
 }

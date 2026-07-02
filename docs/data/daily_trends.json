@@ -6399,6 +6399,52 @@
           }
         ]
       }
+    },
+    {
+      "key": "jul",
+      "label": "July 2026",
+      "modalities": {
+        "CT": [
+          {
+            "date": "2026-07-01",
+            "completed": 12,
+            "actualMin": 258.84,
+            "actualHHMM": "04:19",
+            "targetMin": 120.0,
+            "targetHHMM": "02:00"
+          }
+        ],
+        "MR": [
+          {
+            "date": "2026-07-01",
+            "completed": 15,
+            "actualMin": 419.79,
+            "actualHHMM": "07:00",
+            "targetMin": 150.0,
+            "targetHHMM": "02:30"
+          }
+        ],
+        "US": [
+          {
+            "date": "2026-07-01",
+            "completed": 16,
+            "actualMin": 141.99,
+            "actualHHMM": "02:22",
+            "targetMin": 90.0,
+            "targetHHMM": "01:30"
+          }
+        ],
+        "XR": [
+          {
+            "date": "2026-07-01",
+            "completed": 13,
+            "actualMin": 116.49,
+            "actualHHMM": "01:56",
+            "targetMin": 60.0,
+            "targetHHMM": "01:00"
+          }
+        ]
+      }
     }
   ]
 }

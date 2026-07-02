@@ -551,6 +551,63 @@
           }
         }
       ]
+    },
+    {
+      "key": "jul",
+      "label": "July 2026",
+      "modalities": [
+        {
+          "modality": "CT",
+          "completed": 12,
+          "nonCompleteDone": 0,
+          "nonCompleted": 3,
+          "statusBreakdown": {
+            "complete": 12,
+            "noshow": 1,
+            "standby": 2
+          }
+        },
+        {
+          "modality": "MRI",
+          "completed": 15,
+          "nonCompleteDone": 12,
+          "nonCompleted": 14,
+          "statusBreakdown": {
+            "complete": 15,
+            "e_complete": 5,
+            "e_complete_done": 1,
+            "noshow": 4,
+            "pending_done": 11,
+            "standby": 5
+          }
+        },
+        {
+          "modality": "Ultrasound",
+          "completed": 16,
+          "nonCompleteDone": 3,
+          "nonCompleted": 1,
+          "statusBreakdown": {
+            "complete": 16,
+            "pending_done": 2,
+            "standby": 1,
+            "standby_done": 1
+          }
+        },
+        {
+          "modality": "XRAY",
+          "completed": 13,
+          "nonCompleteDone": 2,
+          "nonCompleted": 6,
+          "statusBreakdown": {
+            "complete": 13,
+            "e_complete_done": 1,
+            "noshow": 2,
+            "noshow_done": 1,
+            "pending": 1,
+            "standby": 3
+          }
+        }
+      ]
     }
   ]
 }

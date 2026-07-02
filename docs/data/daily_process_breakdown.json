@@ -15141,6 +15141,108 @@
           ]
         }
       ]
+    },
+    {
+      "key": "jul",
+      "label": "July 2026",
+      "modalities": [
+        {
+          "modality": "CT",
+          "points": [
+            {
+              "date": "2026-07-01",
+              "tokens": 12,
+              "billingMinutes": 60.71,
+              "serviceMinutes": 121.82,
+              "dispatchMinutes": 94.37,
+              "serviceBreakdown": {
+                "waitMinutes": 105.59,
+                "serviceMinutes": 16.23,
+                "holdMinutes": 0.0,
+                "componentTotal": 121.82
+              },
+              "billingBreakdown": {
+                "waitMinutes": 20.05,
+                "serviceMinutes": 11.58,
+                "holdMinutes": 29.08,
+                "componentTotal": 60.71
+              }
+            }
+          ]
+        },
+        {
+          "modality": "MRI",
+          "points": [
+            {
+              "date": "2026-07-01",
+              "tokens": 15,
+              "billingMinutes": 59.41,
+              "serviceMinutes": 140.27,
+              "dispatchMinutes": 234.45,
+              "serviceBreakdown": {
+                "waitMinutes": 110.13,
+                "serviceMinutes": 25.24,
+                "holdMinutes": 4.89,
+                "componentTotal": 140.26
+              },
+              "billingBreakdown": {
+                "waitMinutes": 17.54,
+                "serviceMinutes": 12.54,
+                "holdMinutes": 29.33,
+                "componentTotal": 59.41
+              }
+            }
+          ]
+        },
+        {
+          "modality": "Ultrasound",
+          "points": [
+            {
+              "date": "2026-07-01",
+              "tokens": 16,
+              "billingMinutes": 36.84,
+              "serviceMinutes": 90.92,
+              "dispatchMinutes": 38.25,
+              "serviceBreakdown": {
+                "waitMinutes": 44.73,
+                "serviceMinutes": 40.38,
+                "holdMinutes": 5.81,
+                "componentTotal": 90.92
+              },
+              "billingBreakdown": {
+                "waitMinutes": 25.23,
+                "serviceMinutes": 7.84,
+                "holdMinutes": 1.53,
+                "componentTotal": 34.6
+              }
+            }
+          ]
+        },
+        {
+          "modality": "XRAY",
+          "points": [
+            {
+              "date": "2026-07-01",
+              "tokens": 13,
+              "billingMinutes": 27.04,
+              "serviceMinutes": 57.17,
+              "dispatchMinutes": 39.83,
+              "serviceBreakdown": {
+                "waitMinutes": 44.76,
+                "serviceMinutes": 12.4,
+                "holdMinutes": 0.0,
+                "componentTotal": 57.16
+              },
+              "billingBreakdown": {
+                "waitMinutes": 15.63,
+                "serviceMinutes": 4.77,
+                "holdMinutes": 6.64,
+                "componentTotal": 27.04
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }

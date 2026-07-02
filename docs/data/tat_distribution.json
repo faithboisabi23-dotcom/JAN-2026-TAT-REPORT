@@ -463,6 +463,64 @@
           "tokenCount": 326
         }
       ]
+    },
+    {
+      "key": "jul",
+      "label": "July 2026",
+      "modalities": [
+        {
+          "modality": "CT",
+          "billingMinutes": 60.71,
+          "billingHHMM": "01:01",
+          "billingPct": 21.9,
+          "serviceMinutes": 121.82,
+          "serviceHHMM": "02:02",
+          "servicePct": 44.0,
+          "dispatchMinutes": 94.37,
+          "dispatchHHMM": "01:34",
+          "dispatchPct": 34.1,
+          "tokenCount": 12
+        },
+        {
+          "modality": "MRI",
+          "billingMinutes": 59.41,
+          "billingHHMM": "00:59",
+          "billingPct": 13.7,
+          "serviceMinutes": 140.27,
+          "serviceHHMM": "02:20",
+          "servicePct": 32.3,
+          "dispatchMinutes": 234.45,
+          "dispatchHHMM": "03:54",
+          "dispatchPct": 54.0,
+          "tokenCount": 15
+        },
+        {
+          "modality": "Ultrasound",
+          "billingMinutes": 36.84,
+          "billingHHMM": "00:37",
+          "billingPct": 22.2,
+          "serviceMinutes": 90.92,
+          "serviceHHMM": "01:31",
+          "servicePct": 54.8,
+          "dispatchMinutes": 38.25,
+          "dispatchHHMM": "00:38",
+          "dispatchPct": 23.0,
+          "tokenCount": 16
+        },
+        {
+          "modality": "XRAY",
+          "billingMinutes": 27.04,
+          "billingHHMM": "00:27",
+          "billingPct": 21.8,
+          "serviceMinutes": 57.17,
+          "serviceHHMM": "00:57",
+          "servicePct": 46.1,
+          "dispatchMinutes": 39.83,
+          "dispatchHHMM": "00:40",
+          "dispatchPct": 32.1,
+          "tokenCount": 13
+        }
+      ]
     }
   ]
 }

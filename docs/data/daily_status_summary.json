@@ -8889,6 +8889,61 @@
           }
         }
       }
+    },
+    {
+      "key": "jul",
+      "label": "July 2026",
+      "daily": [
+        {
+          "date": "2026-07-01",
+          "totalTokens": 99,
+          "statusCounts": {
+            "Complete": 56,
+            "E-Complete": 5,
+            "E-complete - Done": 2,
+            "Noshow": 7,
+            "Noshow - Done": 1,
+            "Pending": 2,
+            "Pending - Done": 13,
+            "Standby": 12,
+            "Standby - Done": 1
+          },
+          "completedTokens": 56,
+          "eCompleteTokens": 7,
+          "allCompletedTokens": 56,
+          "nonCompleteDoneTokens": 17,
+          "nonCompletedTokens": 26,
+          "pendingTokens": 15,
+          "servingTokens": 0,
+          "noShowTokens": 8,
+          "standbyTokens": 13,
+          "completionRate": 56.6
+        }
+      ],
+      "dailyModality": {
+        "2026-07-01": {
+          "CT": {
+            "completed": 12,
+            "nonCompleteDone": 0,
+            "nonCompleted": 3
+          },
+          "MRI": {
+            "completed": 15,
+            "nonCompleteDone": 12,
+            "nonCompleted": 14
+          },
+          "Ultrasound": {
+            "completed": 16,
+            "nonCompleteDone": 3,
+            "nonCompleted": 1
+          },
+          "XRAY": {
+            "completed": 13,
+            "nonCompleteDone": 2,
+            "nonCompleted": 6
+          }
+        }
+      }
     }
   ]
 }
