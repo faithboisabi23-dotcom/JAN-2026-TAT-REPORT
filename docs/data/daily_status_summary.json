@@ -3485,9 +3485,8 @@
           "totalTokens": 114,
           "statusCounts": {
             "Complete": 76,
-            "Complete - Done": 1,
             "E-Complete": 2,
-            "E-complete - Done": 1,
+            "E-complete - Done": 2,
             "Noshow": 1,
             "Pending": 17,
             "Pending - Done": 1,
@@ -3496,10 +3495,10 @@
             "Standby": 12
           },
           "completedTokens": 76,
-          "eCompleteTokens": 3,
+          "eCompleteTokens": 4,
           "allCompletedTokens": 76,
-          "nonCompleteDoneTokens": 3,
-          "nonCompletedTokens": 35,
+          "nonCompleteDoneTokens": 4,
+          "nonCompletedTokens": 34,
           "pendingTokens": 18,
           "servingTokens": 3,
           "noShowTokens": 1,
@@ -4034,8 +4033,8 @@
           },
           "MRI": {
             "completed": 19,
-            "nonCompleteDone": 0,
-            "nonCompleted": 24
+            "nonCompleteDone": 1,
+            "nonCompleted": 23
           },
           "Ultrasound": {
             "completed": 20,

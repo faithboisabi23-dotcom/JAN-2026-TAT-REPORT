@@ -208,13 +208,12 @@
         {
           "modality": "MRI",
           "completed": 398,
-          "nonCompleteDone": 127,
-          "nonCompleted": 299,
+          "nonCompleteDone": 128,
+          "nonCompleted": 298,
           "statusBreakdown": {
             "complete": 398,
-            "complete_done": 1,
             "e_complete": 86,
-            "e_complete_done": 6,
+            "e_complete_done": 7,
             "noshow": 22,
             "pending": 69,
             "pending_done": 116,
