@@ -558,53 +558,62 @@
       "modalities": [
         {
           "modality": "CT",
-          "completed": 12,
-          "nonCompleteDone": 0,
-          "nonCompleted": 3,
+          "completed": 25,
+          "nonCompleteDone": 3,
+          "nonCompleted": 4,
           "statusBreakdown": {
-            "complete": 12,
+            "complete": 25,
+            "e_complete": 1,
+            "e_complete_done": 1,
             "noshow": 1,
+            "noshow_done": 1,
+            "pending_done": 1,
             "standby": 2
           }
         },
         {
           "modality": "MRI",
-          "completed": 15,
-          "nonCompleteDone": 12,
-          "nonCompleted": 14,
+          "completed": 33,
+          "nonCompleteDone": 22,
+          "nonCompleted": 21,
           "statusBreakdown": {
-            "complete": 15,
-            "e_complete": 5,
-            "e_complete_done": 1,
-            "noshow": 4,
-            "pending_done": 11,
-            "standby": 5
+            "complete": 33,
+            "e_complete": 6,
+            "e_complete_done": 4,
+            "noshow": 5,
+            "pending": 1,
+            "pending_done": 16,
+            "standby": 9,
+            "standby_done": 2
           }
         },
         {
           "modality": "Ultrasound",
-          "completed": 16,
-          "nonCompleteDone": 3,
-          "nonCompleted": 1,
+          "completed": 30,
+          "nonCompleteDone": 6,
+          "nonCompleted": 2,
           "statusBreakdown": {
-            "complete": 16,
-            "pending_done": 2,
+            "complete": 30,
+            "e_complete": 1,
+            "pending_done": 5,
             "standby": 1,
             "standby_done": 1
           }
         },
         {
           "modality": "XRAY",
-          "completed": 13,
-          "nonCompleteDone": 2,
-          "nonCompleted": 6,
+          "completed": 31,
+          "nonCompleteDone": 4,
+          "nonCompleted": 7,
           "statusBreakdown": {
-            "complete": 13,
+            "complete": 31,
             "e_complete_done": 1,
             "noshow": 2,
             "noshow_done": 1,
             "pending": 1,
-            "standby": 3
+            "serving_done": 1,
+            "standby": 4,
+            "standby_done": 1
           }
         }
       ]

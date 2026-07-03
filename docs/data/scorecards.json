@@ -107,15 +107,15 @@
     {
       "key": "jul",
       "label": "July 2026",
-      "totalTokens": 99,
-      "completedTokens": 56,
-      "eCompleteTokens": 7,
-      "allCompletedTokens": 56,
-      "pendingTokens": 15,
-      "servingTokens": 0,
-      "noShowTokens": 8,
-      "standbyTokens": 13,
-      "completionRate": 56.6
+      "totalTokens": 191,
+      "completedTokens": 119,
+      "eCompleteTokens": 14,
+      "allCompletedTokens": 119,
+      "pendingTokens": 25,
+      "servingTokens": 1,
+      "noShowTokens": 10,
+      "standbyTokens": 22,
+      "completionRate": 62.3
     }
   ]
 }
