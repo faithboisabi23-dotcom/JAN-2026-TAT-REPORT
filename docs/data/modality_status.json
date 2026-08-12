@@ -636,53 +636,66 @@
       "modalities": [
         {
           "modality": "CT",
-          "completed": 57,
-          "nonCompleteDone": 0,
-          "nonCompleted": 38,
+          "completed": 70,
+          "nonCompleteDone": 4,
+          "nonCompleted": 41,
           "statusBreakdown": {
-            "complete": 57,
+            "complete": 70,
             "noshow": 2,
-            "pending": 10,
+            "pending": 11,
+            "pending_done": 2,
             "serving": 4,
-            "standby": 22
+            "serving_done": 1,
+            "standby": 24,
+            "standby_done": 1
           }
         },
         {
           "modality": "MRI",
-          "completed": 89,
-          "nonCompleteDone": 0,
-          "nonCompleted": 149,
+          "completed": 94,
+          "nonCompleteDone": 16,
+          "nonCompleted": 163,
           "statusBreakdown": {
-            "complete": 89,
-            "noshow": 8,
-            "pending": 78,
+            "complete": 94,
+            "e_complete": 1,
+            "noshow": 11,
+            "pending": 79,
+            "pending_done": 15,
             "serving": 6,
-            "standby": 57
+            "serving_done": 1,
+            "standby": 66
           }
         },
         {
           "modality": "Ultrasound",
-          "completed": 123,
-          "nonCompleteDone": 0,
-          "nonCompleted": 42,
+          "completed": 139,
+          "nonCompleteDone": 8,
+          "nonCompleted": 48,
           "statusBreakdown": {
-            "complete": 123,
-            "noshow": 4,
-            "pending": 24,
+            "complete": 139,
+            "e_complete": 1,
+            "noshow": 6,
+            "pending": 25,
+            "pending_done": 6,
             "serving": 2,
-            "standby": 12
+            "serving_done": 1,
+            "standby": 14,
+            "standby_done": 1
           }
         },
         {
           "modality": "XRAY",
-          "completed": 124,
-          "nonCompleteDone": 0,
-          "nonCompleted": 20,
+          "completed": 145,
+          "nonCompleteDone": 3,
+          "nonCompleted": 23,
           "statusBreakdown": {
-            "complete": 124,
-            "noshow": 3,
+            "complete": 145,
+            "e_complete": 1,
+            "noshow": 4,
             "pending": 10,
-            "standby": 7
+            "pending_done": 1,
+            "standby": 8,
+            "standby_done": 2
           }
         }
       ]
