@@ -107,14 +107,27 @@
     {
       "key": "jul",
       "label": "July 2026",
-      "totalTokens": 2220,
-      "completedTokens": 1340,
+      "totalTokens": 2395,
+      "completedTokens": 1460,
       "eCompleteTokens": 76,
-      "allCompletedTokens": 1340,
-      "pendingTokens": 404,
+      "allCompletedTokens": 1460,
+      "pendingTokens": 436,
       "servingTokens": 25,
-      "noShowTokens": 83,
-      "standbyTokens": 292,
+      "noShowTokens": 87,
+      "standbyTokens": 311,
+      "completionRate": 61.0
+    },
+    {
+      "key": "aug",
+      "label": "August 2026",
+      "totalTokens": 677,
+      "completedTokens": 409,
+      "eCompleteTokens": 0,
+      "allCompletedTokens": 409,
+      "pendingTokens": 135,
+      "servingTokens": 12,
+      "noShowTokens": 18,
+      "standbyTokens": 103,
       "completionRate": 60.4
     }
   ]
