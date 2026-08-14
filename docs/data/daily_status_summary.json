@@ -10284,6 +10284,54 @@
           "noShowTokens": 6,
           "standbyTokens": 19,
           "completionRate": 47.9
+        },
+        {
+          "date": "2026-08-12",
+          "totalTokens": 92,
+          "statusCounts": {
+            "Complete": 57,
+            "E-Complete": 2,
+            "E-complete - Done": 1,
+            "Noshow": 1,
+            "Pending - Done": 21,
+            "Serving - Done": 1,
+            "Standby": 9
+          },
+          "completedTokens": 57,
+          "eCompleteTokens": 3,
+          "allCompletedTokens": 57,
+          "nonCompleteDoneTokens": 23,
+          "nonCompletedTokens": 12,
+          "pendingTokens": 21,
+          "servingTokens": 1,
+          "noShowTokens": 1,
+          "standbyTokens": 9,
+          "completionRate": 62.0
+        },
+        {
+          "date": "2026-08-13",
+          "totalTokens": 88,
+          "statusCounts": {
+            "Complete": 44,
+            "E-Complete": 5,
+            "Noshow": 1,
+            "Noshow - Done": 1,
+            "Pending": 1,
+            "Pending - Done": 25,
+            "Serving - Done": 2,
+            "Standby": 5,
+            "Standby - Done": 4
+          },
+          "completedTokens": 44,
+          "eCompleteTokens": 5,
+          "allCompletedTokens": 44,
+          "nonCompleteDoneTokens": 32,
+          "nonCompletedTokens": 12,
+          "pendingTokens": 26,
+          "servingTokens": 2,
+          "noShowTokens": 2,
+          "standbyTokens": 9,
+          "completionRate": 50.0
         }
       ],
       "dailyModality": {
@@ -10483,6 +10531,50 @@
             "completed": 21,
             "nonCompleteDone": 3,
             "nonCompleted": 3
+          }
+        },
+        "2026-08-12": {
+          "CT": {
+            "completed": 12,
+            "nonCompleteDone": 0,
+            "nonCompleted": 5
+          },
+          "MRI": {
+            "completed": 11,
+            "nonCompleteDone": 16,
+            "nonCompleted": 3
+          },
+          "Ultrasound": {
+            "completed": 9,
+            "nonCompleteDone": 7,
+            "nonCompleted": 2
+          },
+          "XRAY": {
+            "completed": 25,
+            "nonCompleteDone": 0,
+            "nonCompleted": 1
+          }
+        },
+        "2026-08-13": {
+          "CT": {
+            "completed": 13,
+            "nonCompleteDone": 8,
+            "nonCompleted": 4
+          },
+          "MRI": {
+            "completed": 9,
+            "nonCompleteDone": 15,
+            "nonCompleted": 5
+          },
+          "Ultrasound": {
+            "completed": 9,
+            "nonCompleteDone": 9,
+            "nonCompleted": 0
+          },
+          "XRAY": {
+            "completed": 13,
+            "nonCompleteDone": 0,
+            "nonCompleted": 2
           }
         }
       }
