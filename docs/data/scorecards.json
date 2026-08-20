@@ -120,14 +120,14 @@
     {
       "key": "aug",
       "label": "August 2026",
-      "totalTokens": 1340,
-      "completedTokens": 759,
-      "eCompleteTokens": 40,
-      "allCompletedTokens": 759,
-      "pendingTokens": 292,
-      "servingTokens": 21,
-      "noShowTokens": 37,
-      "standbyTokens": 191,
+      "totalTokens": 1464,
+      "completedTokens": 828,
+      "eCompleteTokens": 55,
+      "allCompletedTokens": 828,
+      "pendingTokens": 311,
+      "servingTokens": 22,
+      "noShowTokens": 45,
+      "standbyTokens": 203,
       "completionRate": 56.6
     }
   ]
